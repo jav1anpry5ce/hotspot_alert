@@ -25,7 +25,7 @@ export default function Post({ match }) {
 
   useEffect(() => {
     if (data.success) {
-      document.getElementById("comment").reset();
+      document.getElementById("comment").value = "";
       dispatch(resetSuccess());
       setComment("");
     }

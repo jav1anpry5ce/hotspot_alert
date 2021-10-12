@@ -202,6 +202,7 @@ export default function Home() {
                 option2={post.option2}
                 option3={post.option3}
                 option4={post.option4}
+                comments={post.comments.slice(0, 5)}
                 viewPost
               />
             ))

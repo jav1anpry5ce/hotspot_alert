@@ -6,17 +6,16 @@ import {
   Typography,
   Button,
   Image,
-  Input,
   Comment,
   Form,
   Tooltip,
 } from "antd";
+import { Textarea } from "./Elements";
 import moment from "moment";
 import ReactPlayer from "react-player";
 import { useHistory } from "react-router-dom";
 const { Meta } = Card;
 const { Text, Paragraph, Title } = Typography;
-const { TextArea } = Input;
 
 export default function PostCard({
   id,
@@ -168,9 +167,15 @@ export default function PostCard({
         </Stack>
       </Paragraph>
       {addComment ? (
-        <Form onFinish={onSubmit} id="comment" layout="vertical">
+        <Form onFinish={onSubmit} layout="vertical">
           <Form.Item label="Add a comment">
-            <TextArea rows={3} onChange={(e) => setComment(e.target.value)} />
+            <Textarea
+              as="textArea"
+              name="comment"
+              id="comment"
+              rows={3}
+              onChange={(e) => setComment(e.target.value)}
+            />
           </Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
             Add Comment
