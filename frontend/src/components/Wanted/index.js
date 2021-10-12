@@ -50,7 +50,7 @@ export default function Wanted() {
     if (data.success) {
       document.getElementById("wanted-form").reset();
       dispatch(clearState());
-      dispatch(getWantedList());
+      dispatch(getWantedList(1));
       showModal();
     }
     // eslint-disable-next-line
