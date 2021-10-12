@@ -10,8 +10,13 @@ export const register = createAsyncThunk(
         Authorization: "Token " + sessionStorage.getItem("token"),
       },
     };
+    let formData = new FormData();
+    formData.append("email", data.email);
+    formData.append("username", data.username);
+    formData.append("name", data.name);
+    formData.append("image", data.image);
     try {
-      await axios.post("auth/register/", data, config);
+      await axios.post("auth/register/", formData, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -120,6 +125,7 @@ export const authSlice = createSlice({
     loading: false,
     username: sessionStorage.getItem("username"),
     is_auth: String(true) === sessionStorage.getItem("is_auth"),
+    is_admin: String(true) === sessionStorage.getItem("is_admin"),
     token: sessionStorage.getItem("token"),
     message: null,
     success: false,
@@ -175,10 +181,12 @@ export const authSlice = createSlice({
       state.loading = false;
       state.username = payload.data.username;
       state.is_auth = true;
+      state.is_admin = payload.data.is_admin;
       state.token = payload.data.auth_token;
       state.message = null;
       sessionStorage.setItem("username", payload.data.username);
       sessionStorage.setItem("is_auth", true);
+      sessionStorage.setItem("is_admin", payload.data.is_admin);
       sessionStorage.setItem("token", payload.data.auth_token);
       sessionStorage.setItem("_expiredTime", Date.now() + 60 * 60 * 1000);
     },
@@ -197,9 +205,11 @@ export const authSlice = createSlice({
       state.loading = false;
       state.username = null;
       state.is_auth = false;
+      state.is_admin = false;
       state.token = null;
       sessionStorage.removeItem("username");
       sessionStorage.removeItem("is_auth");
+      sessionStorage.removeItem("is_admin");
       sessionStorage.removeItem("token");
     },
     [logout.rejected]: (state) => {

@@ -1,34 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { Card, Typography, Button, Input, Form } from "antd";
+import { Card, Typography, Button, Input, Form, Alert } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../store/authSlice";
+import { resetRequest, clearState } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
+import { openNotification } from "../../functions/Notification";
 
 const { Title } = Typography;
 
-export default function SignIn() {
+export default function ForgotPassword() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    if (auth.is_auth) {
-      history.push("/");
-    }
     dispatch(setActiveKey(""));
+    return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, []);
+
+  useEffect(() => {
+    if (auth.success) {
+      form.setFieldsValue({
+        username: "",
+        email: "",
+      });
+      openNotification(
+        "success",
+        "Success",
+        "An email as been sent with your reset link."
+      );
+    }
+    // eslint-disable-next-line
+  }, [auth.success]);
 
   const onSubmit = () => {
     const data = {
+      email,
       username,
-      password,
     };
-    dispatch(login(data));
+    dispatch(resetRequest(data));
   };
 
   return (
@@ -39,40 +54,43 @@ export default function SignIn() {
         headStyle={{ backgroundColor: "#383d42" }}
         title={
           <Title style={{ color: "#fff" }} level={3}>
-            Sign In
+            Forgot Password
           </Title>
         }
       >
-        <Form layout="vertical" onFinish={onSubmit}>
+        {auth.message ? <Alert message={auth.message} type="error" /> : null}
+        <Form layout="vertical" onFinish={onSubmit} form={form}>
           <Form.Item
-            style={{ marginBottom: 2 }}
             label="Username"
             name="username"
+            style={{ marginBottom: 2 }}
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input onChange={(e) => setUsername(e.target.value)} />
+            <Input
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              allowClear
+            />
           </Form.Item>
           <Form.Item
-            style={{ display: "flex", marginBottom: 13 }}
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            label="Email"
+            name="email"
+            style={{ marginBottom: 15 }}
+            rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input.Password
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+            <Input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              allowClear
             />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Button type="primary" htmlType="submit" loading={auth.loading}>
-                Sign In
+                Submit
               </Button>
-              <Button
-                onClick={() => history.push("/account/forgot-password")}
-                disabled={auth.loading}
-              >
-                Forgot Password?
+              <Button onClick={() => history.push("/account/signin")}>
+                Return to Sign In
               </Button>
             </div>
           </Form.Item>

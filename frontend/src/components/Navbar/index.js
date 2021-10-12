@@ -3,7 +3,7 @@ import { Navbar as NavBar, Item, Dropdown } from "./NavbarElements";
 import { Nav } from "rsuite";
 import { Container } from "@mui/material";
 import { AiFillHome } from "react-icons/ai";
-import { RiCriminalFill } from "react-icons/ri";
+import { RiCriminalFill, RiUserAddLine } from "react-icons/ri";
 import { FcSettings } from "react-icons/fc";
 import { GoSignOut } from "react-icons/go";
 import { useHistory } from "react-router-dom";
@@ -43,9 +43,23 @@ export default function Navbar() {
                 style={{ marginRight: 3, fontSize: 16, marginBottom: -2 }}
               />
             }
+            onClick={() => history.push("/wanted")}
           >
             Wanted
           </Item>
+          {auth.is_admin ? (
+            <Item
+              eventKey="3"
+              icon={
+                <RiUserAddLine
+                  style={{ marginRight: 3, fontSize: 16, marginBottom: -2 }}
+                />
+              }
+              onClick={() => history.push("/add-account")}
+            >
+              Add Account
+            </Item>
+          ) : null}
         </Nav>
         {auth.is_auth ? (
           <Container maxWidth="xsl">
@@ -71,7 +85,7 @@ export default function Navbar() {
                 }
               >
                 <Dropdown.Item
-                  eventKey="3"
+                  eventKey="4"
                   onClick={() => history.push("/account/change-password")}
                 >
                   Change password

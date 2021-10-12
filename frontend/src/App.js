@@ -9,6 +9,11 @@ import Home from "./components/Home";
 import Post from "./components/Post";
 import SignIn from "./components/SignIn";
 import ChangePassword from "./components/ChangePassword";
+import Wanted from "./components/Wanted";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
+import AddAccount from "./components/AddAccount";
+import AccountActivation from "./components/AccountActivation";
 import image from "./images/justice.jpeg";
 
 axios.defaults.baseURL = "http://192.168.0.200:8000/";
@@ -37,6 +42,23 @@ function App() {
               exact
               path="/account/change-password"
               component={ChangePassword}
+            />
+            <Route exact path="/wanted" component={Wanted} />
+            <Route
+              exact
+              path="/account/forgot-password"
+              component={ForgotPassword}
+            />
+            <Route
+              exact
+              path="/account/password/reset/:token"
+              component={ResetPassword}
+            />
+            <Route exact path="/add-account" component={AddAccount} />
+            <Route
+              exact
+              path="/account/activation/:activate/:token"
+              component={AccountActivation}
             />
           </Content>
         </Switch>

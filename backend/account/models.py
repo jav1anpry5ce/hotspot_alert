@@ -21,6 +21,7 @@ class UserAccountManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
+        user.is_admin = True
         user.set_password(password)
         user.save()
         return user
@@ -31,6 +32,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)

@@ -2,37 +2,44 @@ import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import { Card, Typography, Button, Input, Form, Alert } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { changePassword, clearState } from "../../store/authSlice";
+import { activate, clearState } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
+import { openNotification } from "../../functions/Notification";
 
 const { Title } = Typography;
 
-export default function ChangePassword() {
+export default function AccountActivation({ match }) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [conPassword, setConPassword] = useState("");
 
   useEffect(() => {
-    if (!auth.is_auth) {
-      history.push("/account/signin");
-    }
-    dispatch(setActiveKey("4"));
+    dispatch(setActiveKey(""));
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, []);
+
+  useEffect(() => {
+    if (auth.success) {
+      history.push("/account/signin");
+      openNotification("success", "Success", "Account Successfully Activated.");
+    }
+    // eslint-disable-next-line
+  }, [auth.success]);
 
   const onSubmit = () => {
     const data = {
-      old_password: oldPassword,
-      new_password: newPassword,
-      con_password: confirmPassword,
+      activate: match.params.activate,
+      token: match.params.token,
+      password,
+      con_password: conPassword,
     };
-    dispatch(changePassword(data));
+    dispatch(activate(data));
   };
+
   return (
     <Container maxWidth="sm">
       <Card
@@ -41,7 +48,7 @@ export default function ChangePassword() {
         headStyle={{ backgroundColor: "#383d42" }}
         title={
           <Title style={{ color: "#fff" }} level={3}>
-            Change Password
+            Activate Account
           </Title>
         }
       >
@@ -49,34 +56,25 @@ export default function ChangePassword() {
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item
             style={{ marginBottom: 2 }}
-            label="Old Password"
-            name="old_password"
+            label="Password"
+            name="password"
             rules={[{ required: true, message: "Please input a password!" }]}
           >
-            <Input.Password onChange={(e) => setOldPassword(e.target.value)} />
+            <Input.Password onChange={(e) => setPassword(e.target.value)} />
           </Form.Item>
           <Form.Item
-            style={{ marginBottom: 2 }}
-            label="New Password"
-            name="new password"
-            rules={[{ required: true, message: "Please input a password!" }]}
-          >
-            <Input.Password onChange={(e) => setNewPassword(e.target.value)} />
-          </Form.Item>
-          <Form.Item
+            style={{ marginBottom: 13 }}
             label="Confirm Password"
-            name="confirm_password"
+            name="con_password"
             rules={[
-              { required: true, message: "Please input password again!" },
+              { required: true, message: "Please confirm your password!" },
             ]}
           >
-            <Input.Password
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <Input.Password onChange={(e) => setConPassword(e.target.value)} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <Button type="primary" htmlType="submit" loading={auth.loading}>
-              Change Password
+              Activate Account
             </Button>
           </Form.Item>
         </Form>

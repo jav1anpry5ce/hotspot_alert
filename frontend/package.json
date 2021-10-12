@@ -24,8 +24,10 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "rsuite": "^5.0.1",
+    "spinners-react": "^1.0.6",
     "styled-components": "^5.3.1",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",

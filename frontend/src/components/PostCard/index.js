@@ -10,7 +10,7 @@ import {
   Form,
   Tooltip,
 } from "antd";
-import { Textarea } from "./Elements";
+import { TextArea } from "./Elements";
 import moment from "moment";
 import ReactPlayer from "react-player";
 import { useHistory } from "react-router-dom";
@@ -169,8 +169,7 @@ export default function PostCard({
       {addComment ? (
         <Form onFinish={onSubmit} layout="vertical">
           <Form.Item label="Add a comment">
-            <Textarea
-              as="textArea"
+            <TextArea
               name="comment"
               id="comment"
               rows={3}

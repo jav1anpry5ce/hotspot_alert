@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { Typography, Spin } from "antd";
+import { Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPost,
@@ -9,6 +9,7 @@ import {
   resetSuccess,
 } from "../../store/postSlice";
 import PostCard from "../PostCard";
+import Loading from "../Loading";
 
 const { Title } = Typography;
 
@@ -43,17 +44,7 @@ export default function Post({ match }) {
   };
 
   if (data.loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "30%",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
+    return <Loading />;
   }
   return (
     <Container maxWidth="sm">

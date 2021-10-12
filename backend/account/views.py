@@ -2,10 +2,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.authtoken.models import Token
 from .models import ResetAccount, ActivateAccount
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
+from post.models import Author
 from django.utils import timezone
 import random
 import string
@@ -16,35 +19,43 @@ User = get_user_model()
 site = Site.objects.get_current()
 
 @api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
 def create(request):
     try:
         password = ''.join(random.choice(string.printable) for i in range(8))
-        if validate_email(request.data.get('email')):
-            if not User.objects.filter(email=request.data.get('email')).exists():
-                if not User.objects.filter(username=request.data.get('username')).exists():
-                    user = User.objects.create_user(email=request.data.get('email'), username=request.data.get('username'), 
-                    name=request.data.get('name'), password=password)
-                    user.save()
-                    activatToken = ActivateAccount.objects.create(user=user)
-                    subject, from_email, to = 'Account Activation!', 'donotreply@localhost', user.email
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>Hello {user.name}, welcome to our system!</p>
-                            <p>Please go to the following link to activate your account.</p>
-                            <p><a href="{site}account/activation/{activatToken.activate}/{activatToken.token}">{site}account/activation/{activatToken.activate}/{activatToken.token}</a></p>
-                        </body>
-                    </html>
-                    '''
-                    text_content = ""
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.content_subtype = "html"
-                    msg.send()
-                    return Response({"Message": "Account successfully created!"})
-                return Response({"Message": "This username is already taken!"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"Message": "This email is already registered!"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"Message": "Email is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_admin:
+            if validate_email(request.data.get('email')):
+                if not User.objects.filter(email=request.data.get('email')).exists():
+                    if not User.objects.filter(username=request.data.get('username')).exists():
+                        user = User.objects.create_user(email=request.data.get('email'), username=request.data.get('username'), 
+                        name=request.data.get('name'), password=password)
+                        if request.data.get('is_admin'):
+                            user.is_admin = True
+                        if request.FILES.get('image'):
+                            user.profile_photo = request.FILES.get('image')
+                        user.save()
+                        Author.objects.create(account=user)
+                        activatToken = ActivateAccount.objects.create(user=user)
+                        subject, from_email, to = 'Account Activation!', 'donotreply@localhost', user.email
+                        html_content = f'''
+                        <html>
+                            <body>
+                                <p>Hello {user.name}, welcome to our system!</p>
+                                <p>Please go to the following link to activate your account.</p>
+                                <p><a href="{site}account/activation/{activatToken.activate}/{activatToken.token}">{site}account/activation/{activatToken.activate}/{activatToken.token}</a></p>
+                            </body>
+                        </html>
+                        '''
+                        text_content = ""
+                        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                        msg.attach_alternative(html_content, "text/html")
+                        msg.content_subtype = "html"
+                        msg.send()
+                        return Response({"Message": "Account successfully created!"})
+                    return Response({"Message": "This username is already taken!"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"Message": "This email is already registered!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Message": "Email is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': 'You are not authorized to create a new account.'}, status=status.HTTP_400_BAD)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,7 +102,8 @@ def login(request):
                 user.save()
                 return Response({
                     "auth_token": token.key, 
-                    "username": user.name
+                    "username": user.name,
+                    "is_admin": user.is_admin,
                     }, status=status.HTTP_200_OK)
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -103,6 +115,7 @@ def login(request):
                 return Response({
                     "auth_token": token.key, 
                     "username": user.name, 
+                    "is_admin": user.is_admin, 
                     })
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_404_NOT_FOUND)
     except:
@@ -120,9 +133,9 @@ def logout(request):
 def resetRequest(request):
     try:
         try:
-            user = User.objects.get(username=request.data.get('username'))
+            user = User.objects.get(username=request.data.get('username'), email=request.data.get('email'))
         except:
-            return Response({'Message': 'username provided does not match any in our records!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Message': 'username and/or email provided does not match any in our records!'}, status=status.HTTP_404_NOT_FOUND)
         if ResetAccount.objects.get(user=user).delete():
             reset = ResetAccount.objects.create(user=user)
             subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
@@ -131,7 +144,7 @@ def resetRequest(request):
             <html>
                 <body>
                     <p>We have received your reset request. attached you will find the reset link.</p>
-                    <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
+                    <a href="{site}account/password/reset/{reset.token}">{site}account/password/reset/{reset.token}</a>
                 </body>
             </html>
             '''
@@ -147,7 +160,7 @@ def resetRequest(request):
             <html>
                 <body>
                     <p>We have received your reset request. attached you will find the reset link.</p>
-                    <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
+                    <a href="{site}account/password/reset/{reset.token}">{site}account/password/reset/{reset.token}</a>
                 </body>
             </html>
             '''
@@ -164,7 +177,7 @@ def resetRequest(request):
             <html>
                 <body>
                     <p>We have received your reset request. attached you will find the reset link.</p>
-                    <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
+                    <a href="{site}account/password/reset/{reset.token}">{site}account/password/reset/{reset.token}</a>
                 </body>
             </html>
             '''

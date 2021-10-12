@@ -2,37 +2,47 @@ import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
 import { Card, Typography, Button, Input, Form, Alert } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { changePassword, clearState } from "../../store/authSlice";
+import { resetPassword, clearState } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
+import { openNotification } from "../../functions/Notification";
 
 const { Title } = Typography;
 
-export default function ChangePassword() {
+export default function ResetPassword({ match }) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [conPassword, setConPassword] = useState("");
 
   useEffect(() => {
-    if (!auth.is_auth) {
-      history.push("/account/signin");
-    }
-    dispatch(setActiveKey("4"));
+    dispatch(setActiveKey(""));
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, []);
+
+  useEffect(() => {
+    if (auth.success) {
+      history.push("/account/signin");
+      openNotification(
+        "success",
+        "Success",
+        "Your password has been successfully reset."
+      );
+    }
+    // eslint-disable-next-line
+  }, [auth.success]);
 
   const onSubmit = () => {
     const data = {
-      old_password: oldPassword,
+      reset_token: match.params.token,
       new_password: newPassword,
-      con_password: confirmPassword,
+      con_password: conPassword,
     };
-    dispatch(changePassword(data));
+    dispatch(resetPassword(data));
   };
+
   return (
     <Container maxWidth="sm">
       <Card
@@ -49,34 +59,25 @@ export default function ChangePassword() {
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item
             style={{ marginBottom: 2 }}
-            label="Old Password"
-            name="old_password"
-            rules={[{ required: true, message: "Please input a password!" }]}
-          >
-            <Input.Password onChange={(e) => setOldPassword(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            style={{ marginBottom: 2 }}
             label="New Password"
-            name="new password"
+            name="new_password"
             rules={[{ required: true, message: "Please input a password!" }]}
           >
             <Input.Password onChange={(e) => setNewPassword(e.target.value)} />
           </Form.Item>
           <Form.Item
+            style={{ marginBottom: 13 }}
             label="Confirm Password"
-            name="confirm_password"
+            name="con_password"
             rules={[
-              { required: true, message: "Please input password again!" },
+              { required: true, message: "Please confirm your password!" },
             ]}
           >
-            <Input.Password
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <Input.Password onChange={(e) => setConPassword(e.target.value)} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <Button type="primary" htmlType="submit" loading={auth.loading}>
-              Change Password
+              Reset Password
             </Button>
           </Form.Item>
         </Form>

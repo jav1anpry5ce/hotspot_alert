@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Spin, Pagination } from "antd";
+import { Button, Modal, Select, Form, Input, Pagination } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -8,6 +8,7 @@ import { getPosts, createPost, clearState } from "../../store/postSlice";
 import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
+import Loading from "../Loading";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -92,13 +93,7 @@ export default function Home() {
   };
 
   if (data.loading) {
-    return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "30%" }}
-      >
-        <Spin size="large" />
-      </div>
-    );
+    return <Loading />;
   }
   return (
     <Container maxWidth="sm">
