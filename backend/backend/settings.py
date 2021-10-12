@@ -151,6 +151,8 @@ REST_FRAMEWORK = {
 
 }
 
+TIME_ZONE = 'America/Jamaica'
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Default primary key field type
