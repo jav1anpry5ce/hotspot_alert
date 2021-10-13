@@ -81,6 +81,7 @@ export const createPost = createAsyncThunk(
       };
       let formData = new FormData();
       if (data.image) {
+        formData.append("user_key", localStorage.getItem("user_key"));
         formData.append("title", data.title);
         formData.append("description", data.description);
         if (data.image.type.includes("image")) {
@@ -91,6 +92,7 @@ export const createPost = createAsyncThunk(
           formData.append("image", null);
         }
       } else {
+        formData.append("user_key", localStorage.getItem("user_key"));
         formData.append("title", data.title);
         formData.append("description", data.description);
       }
@@ -163,12 +165,31 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const setVisibility = createAsyncThunk(
+  "set/visibility",
+  async (data, { rejectWithValue }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    try {
+      await axios.patch("api/set-visibility/", data, config);
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState: {
     loading: false,
     cLoading: false,
+    vLoading: false,
     success: false,
+    vSuccess: false,
     posts: null,
     post: null,
     missingPersons: null,
@@ -178,7 +199,9 @@ export const postSlice = createSlice({
     clearState: (state) => {
       state.loading = false;
       state.cLoading = false;
+      state.vLoading = false;
       state.success = false;
+      state.vSuccess = false;
       state.posts = null;
       state.missingPersons = null;
       state.post = null;
@@ -186,6 +209,7 @@ export const postSlice = createSlice({
     },
     resetSuccess: (state) => {
       state.success = false;
+      state.vSuccess = false;
     },
   },
   extraReducers: {
@@ -248,6 +272,17 @@ export const postSlice = createSlice({
     },
     [addComment.rejected]: (state, { payload }) => {
       state.cLoading = false;
+    },
+    [setVisibility.pending]: (state) => {
+      state.vLoading = true;
+    },
+    [setVisibility.fulfilled]: (state) => {
+      state.vLoading = false;
+      state.vSuccess = true;
+    },
+    [setVisibility.rejected]: (state, { payload }) => {
+      state.vLoading = false;
+      state.message = payload.data;
     },
   },
 });

@@ -8,6 +8,7 @@ import {
   getMissingPersons,
   createPost,
   clearState,
+  resetSuccess,
 } from "../../store/postSlice";
 import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
@@ -65,25 +66,42 @@ export default function MissingPerson() {
       setOption6("");
       setImage(null);
     }
+    if (data.vSuccess) {
+      dispatch(resetSuccess());
+      dispatch(getMissingPersons(page));
+    }
     if (data.message) {
       openNotification("error", "Error", data.message);
     }
     // eslint-disable-next-line
-  }, [data.success, data.message]);
+  }, [data.success, data.message, data.vSuccess]);
 
   const onSubmit = () => {
-    const data = {
-      title: "Missing Person",
-      description,
-      image,
-      option1,
-      option2,
-      option3,
-      option4,
-      option5,
-      option6,
-    };
-    dispatch(createPost(data));
+    if (
+      description &&
+      image &&
+      option1 &&
+      option2 &&
+      option3 &&
+      option4 &&
+      option5 &&
+      option6
+    ) {
+      const data = {
+        title: "Missing Person",
+        description,
+        image,
+        option1,
+        option2,
+        option3,
+        option4,
+        option5,
+        option6,
+      };
+      dispatch(createPost(data));
+    } else {
+      openNotification("error", "Error", "Please fill all required fields.");
+    }
   };
 
   const showModal = () => {
@@ -125,16 +143,24 @@ export default function MissingPerson() {
         ]}
       >
         <Form layout="vertical" id="missing-form" onFinish={onSubmit}>
-          <Form.Item label="Report Description" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Report Description"
+            style={{ marginBottom: 2 }}
+          >
             <TextArea
               rows={4}
               onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Item>
-          <Form.Item label="Last Seen Attire" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Last Seen Attire"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setOption1(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Gender" style={{ marginBottom: 2 }}>
+          <Form.Item required label="Gender" style={{ marginBottom: 2 }}>
             <Select
               style={{ borderRadius: 30 }}
               onChange={(e) => setOption2(e)}
@@ -146,19 +172,40 @@ export default function MissingPerson() {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Age" style={{ marginBottom: 2 }}>
-            <Input onChange={(e) => setOption3(e.target.value)} />
+          <Form.Item required label="Age" style={{ marginBottom: 2 }}>
+            <Input
+              type="number"
+              min="0"
+              max="130"
+              onChange={(e) => setOption3(e.target.value)}
+            />
           </Form.Item>
-          <Form.Item label="Last seen location" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Last seen location"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setOption4(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Next of kin name" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Next of kin name"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setOption5(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Contact Information" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Contact Information"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setOption6(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Upload an image" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Upload an image"
+            style={{ marginBottom: 2 }}
+          >
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
           </Form.Item>
         </Form>
@@ -190,6 +237,7 @@ export default function MissingPerson() {
                 option4={person.option4}
                 option5={person.option5}
                 option6={person.option6}
+                visible={person.visible}
                 viewPost
               />
             ))

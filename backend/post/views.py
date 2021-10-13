@@ -1,13 +1,16 @@
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import viewsets
+from rest_framework.decorators import permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
 from .models import Post, Author, Comment
 from .serializers import PostSerializer, CreatePostSerializer
+
+from wanted.models import Wanted
+from wanted.serializers import WantedSerializer
 
 class PostViewSet(ListAPIView):
     queryset = Post.objects.all().exclude(title='Missing Person')
@@ -23,6 +26,7 @@ class PostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
         try:
+            print(request.data)
             if request.data.get('title') == 'Missing Person':
                 if request.user.is_authenticated:
                     serializer = CreatePostSerializer(data=request.data)
@@ -61,10 +65,36 @@ def add_comment(request):
             author = Author.objects.get(account=request.user)
             comment = Comment.objects.create(description=request.data.get('description'), author=author)
         else:
-            comment = Comment.objects.create(description=request.data.get('description'))
+            comment = Comment.objects.create(description=request.data.get('description'), user_key=request.data.get('user_key'))
         post = Post.objects.get(id=request.data.get('id'))
         post.comments.add(comment)
         serializer = PostSerializer(post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+        return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def add_wanted_comment(request):
+    try:
+        if request.user.is_authenticated:
+            author = Author.objects.get(account=request.user)
+            comment = Comment.objects.create(description=request.data.get('description'), author=author)
+        else:
+            comment = Comment.objects.create(description=request.data.get('description'), user_key=request.data.get('user_key'))
+        wanted = Wanted.objects.get(id=request.data.get('id'))
+        wanted.comments.add(comment)
+        serializer = WantedSerializer(wanted)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+        return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+@permission_classes([permissions.IsAuthenticated])
+def set_visibility(request):
+    try:
+        post = Post.objects.get(id=request.data.get('id'))
+        post.visible = not(post.visible)
+        post.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     except:
         return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)

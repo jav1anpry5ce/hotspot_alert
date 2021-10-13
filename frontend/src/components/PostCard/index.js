@@ -1,11 +1,22 @@
 import React from "react";
 import { Stack } from "@mui/material";
-import { Card, Avatar, Typography, Button, Image, Comment, Form } from "antd";
+import {
+  Card,
+  Avatar,
+  Typography,
+  Button,
+  Image,
+  Comment,
+  Form,
+  Dropdown,
+  Menu,
+} from "antd";
 import { TextArea } from "./Elements";
 import ReactPlayer from "react-player";
 import { useHistory } from "react-router-dom";
-import { setActiveKey } from "../../store/navSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AiOutlineMore } from "react-icons/ai";
+import { setVisibility } from "../../store/postSlice";
 const { Meta } = Card;
 const { Text, Paragraph, Title } = Typography;
 
@@ -29,14 +40,34 @@ export default function PostCard({
   onSubmit,
   setComment,
   viewPost,
+  visible,
+  userKey,
 }) {
+  const auth = useSelector((state) => state.auth);
   const history = useHistory();
   const dispatch = useDispatch();
-  if (title === "Missing Person") {
-    dispatch(setActiveKey("2"));
-  } else {
-    dispatch(setActiveKey("1"));
-  }
+
+  const onClick = () => {
+    const data = {
+      id,
+    };
+    dispatch(setVisibility(data));
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key={id}>
+        {auth.is_auth ? (
+          visible ? (
+            <Button onClick={onClick}>Set post invisible</Button>
+          ) : (
+            <Button onClick={onClick}>Set post visible</Button>
+          )
+        ) : null}
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <Card
       style={{
@@ -58,22 +89,53 @@ export default function PostCard({
         }
         title={
           author ? (
-            <div style={{ display: "flex", marginBottom: -3 }}>
-              <Text>{author.account.name}</Text>
-              <span
-                style={{
-                  fontSize: 16,
-                  color: "#47a6ff",
-                  marginLeft: 2,
-                  marginTop: 6,
-                }}
-                class="material-icons"
-              >
-                verified
-              </span>
+            <div
+              style={{
+                display: "flex",
+                marginBottom: -3,
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <Text>{author.account.name}</Text>
+                <span
+                  style={{
+                    fontSize: 16,
+                    color: "#47a6ff",
+                    marginLeft: 2,
+                    marginTop: 6,
+                  }}
+                  class="material-icons"
+                >
+                  verified
+                </span>
+              </div>
+              {auth.is_auth ? (
+                <Dropdown overlay={menu}>
+                  <AiOutlineMore
+                    style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
+                  />
+                </Dropdown>
+              ) : null}
             </div>
           ) : (
-            <Text style={{ display: "flex", marginBottom: -3 }}>Anonymous</Text>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ display: "flex", marginBottom: -1 }}>
+                anonymous_user_{userKey}
+              </Text>
+              {auth.is_auth ? (
+                <Dropdown overlay={menu}>
+                  <AiOutlineMore
+                    style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
+                  />
+                </Dropdown>
+              ) : null}
+            </div>
           )
         }
         description={
@@ -152,7 +214,7 @@ export default function PostCard({
                           </span>
                         </div>
                       ) : (
-                        "Anonymous"
+                        `anonymous_user_${comment.user_key}`
                       )}
                     </div>
                   }

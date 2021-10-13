@@ -89,7 +89,10 @@ export default function ForgotPassword() {
               <Button type="primary" htmlType="submit" loading={auth.loading}>
                 Submit
               </Button>
-              <Button onClick={() => history.push("/account/signin")}>
+              <Button
+                onClick={() => history.push("/account/signin")}
+                disabled={auth.loading}
+              >
                 Return to Sign In
               </Button>
             </div>

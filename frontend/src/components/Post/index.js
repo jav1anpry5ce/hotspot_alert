@@ -10,11 +10,13 @@ import {
 } from "../../store/postSlice";
 import PostCard from "../PostCard";
 import Loading from "../Loading";
+import { setActiveKey } from "../../store/navSlice";
 
 const { Title } = Typography;
 
 export default function Post({ match }) {
   const data = useSelector((state) => state.post);
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
 
@@ -33,11 +35,31 @@ export default function Post({ match }) {
     // eslint-disable-next-line
   }, [data.success]);
 
+  useEffect(() => {
+    if (data.vSuccess) {
+      dispatch(resetSuccess());
+      dispatch(getPost(match.params.post_id));
+    }
+    // eslint-disable-next-line
+  }, [data.vSuccess]);
+
+  useEffect(() => {
+    if (data.post) {
+      if (data.post.title === "Missing Person") {
+        dispatch(setActiveKey("2"));
+      } else {
+        dispatch(setActiveKey("1"));
+      }
+    }
+    // eslint-disable-next-line
+  }, [data.post]);
+
   const onSubmit = () => {
     if (comment) {
       const data = {
         id: match.params.post_id,
         description: comment,
+        user_key: localStorage.getItem("user_key"),
       };
       dispatch(addComment(data));
     }
@@ -49,26 +71,57 @@ export default function Post({ match }) {
   return (
     <Container maxWidth="sm">
       {data.post ? (
-        <PostCard
-          id={data.post.id}
-          author={data.post.author}
-          postDate={data.post.created_at}
-          title={data.post.title}
-          postImage={data.post.post_image}
-          postVideo={data.post.post_video}
-          postDescription={data.post.description}
-          option1={data.post.option1}
-          option2={data.post.option2}
-          option3={data.post.option3}
-          option4={data.post.option4}
-          option5={data.post.option5}
-          option6={data.post.option6}
-          comments={data.post.comments}
-          addComment
-          loading={data.cLoading}
-          onSubmit={onSubmit}
-          setComment={setComment}
-        />
+        auth.is_admin ? (
+          <PostCard
+            id={data.post.id}
+            author={data.post.author}
+            postDate={data.post.created_at}
+            title={data.post.title}
+            postImage={data.post.post_image}
+            postVideo={data.post.post_video}
+            postDescription={data.post.description}
+            option1={data.post.option1}
+            option2={data.post.option2}
+            option3={data.post.option3}
+            option4={data.post.option4}
+            option5={data.post.option5}
+            option6={data.post.option6}
+            comments={data.post.comments}
+            visible={data.post.visible}
+            addComment
+            loading={data.cLoading}
+            onSubmit={onSubmit}
+            setComment={setComment}
+            userKey={data.post.user_key}
+          />
+        ) : data.post.visible ? (
+          <PostCard
+            id={data.post.id}
+            author={data.post.author}
+            postDate={data.post.created_at}
+            title={data.post.title}
+            postImage={data.post.post_image}
+            postVideo={data.post.post_video}
+            postDescription={data.post.description}
+            option1={data.post.option1}
+            option2={data.post.option2}
+            option3={data.post.option3}
+            option4={data.post.option4}
+            option5={data.post.option5}
+            option6={data.post.option6}
+            comments={data.post.comments}
+            visible={data.post.visible}
+            addComment
+            loading={data.cLoading}
+            onSubmit={onSubmit}
+            setComment={setComment}
+            userKey={data.post.user_key}
+          />
+        ) : (
+          <Title level={4} style={{ color: "white", marginTop: 250 }}>
+            This post is no longer available or has been removed.
+          </Title>
+        )
       ) : (
         <Title level={3} style={{ color: "white", marginTop: 250 }}>
           The post you are looking for does not exist!

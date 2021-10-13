@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { Card, Typography, Button, Input, Form } from "antd";
+import { Card, Typography, Button, Input, Form, Alert } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../store/authSlice";
+import { login, clearState } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
 
@@ -20,6 +20,7 @@ export default function SignIn() {
       history.push("/");
     }
     dispatch(setActiveKey(""));
+    return () => dispatch(clearState());
     // eslint-disable-next-line
   }, [auth.is_auth]);
 
@@ -43,6 +44,7 @@ export default function SignIn() {
           </Title>
         }
       >
+        {auth.message ? <Alert message={auth.message} type="error" /> : null}
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item
             style={{ marginBottom: 2 }}

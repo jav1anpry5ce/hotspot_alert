@@ -20,6 +20,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'author',
             'created_at',
             'description',
+            'user_key',
         )
 
 class PostSerializer(serializers.ModelSerializer):
@@ -29,6 +30,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             'id',
+            'user_key',
             'author',
             'created_at', 
             'author',
@@ -43,6 +45,7 @@ class PostSerializer(serializers.ModelSerializer):
             'comments',
             'post_image',
             'post_video',
+            'visible',
         )
 
 class CreatePostSerializer(serializers.ModelSerializer):
@@ -50,6 +53,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             'title',
+            'user_key',
             'description',
             'image',
             'option1',

@@ -14,6 +14,7 @@ class Author(models.Model):
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    user_key = models.CharField(max_length=255, blank=True, null=True)
     author = models.ForeignKey(Author, blank=True, null=True, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
@@ -24,9 +25,10 @@ class Post(models.Model):
     option4 = models.CharField(max_length=255, blank=True, null=True)
     option5 = models.CharField(max_length=255, blank=True, null=True)
     option6 = models.CharField(max_length=255, blank=True, null=True)
-    comments = models.ManyToManyField('Comment')
+    comments = models.ManyToManyField('Comment', blank=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
+    visible = models.BooleanField(default=True)
 
     class Meta:
         ordering = ('-created_at',)
@@ -36,18 +38,19 @@ class Post(models.Model):
 
     def post_image(self):
         if self.image:
-            return 'http://192.168.0.200:8000' + self.image.url
+            return 'http://javaughnpryce.live:8000' + self.image.url
         return ''
         
     def post_video(self):
         if self.video:
-            return 'http://192.168.0.200:8000' + self.video.url
+            return 'http://javaughnpryce.live:8000' + self.video.url
         return ''
 
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     author = models.ForeignKey(Author, blank=True, null=True, on_delete=models.DO_NOTHING)
+    user_key = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(max_length=2500)
 

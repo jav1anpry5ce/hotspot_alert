@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Stack } from "@mui/material";
-import {
-  Button,
-  Modal,
-  Form,
-  Input,
-  Pagination,
-  Image,
-  Card,
-  Typography,
-} from "antd";
+import { Button, Modal, Form, Input, Pagination } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,8 +11,8 @@ import {
 import Loading from "../Loading";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
-
-const { Text, Paragraph, Title } = Typography;
+import WantedPostCard from "../WantedPostCard";
+import { openNotification } from "../../functions/Notification";
 
 export default function Wanted() {
   const auth = useSelector((state) => state.auth);
@@ -38,6 +29,7 @@ export default function Wanted() {
   useEffect(() => {
     dispatch(getWantedList(page));
     dispatch(setActiveKey("3"));
+    return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
 
@@ -50,24 +42,39 @@ export default function Wanted() {
     if (data.success) {
       document.getElementById("wanted-form").reset();
       dispatch(clearState());
-      dispatch(getWantedList(1));
+      dispatch(getWantedList(page));
       showModal();
+      setName("");
+      setCrime("");
+      setReward("");
+      setImage(null);
+    }
+    if (data.vSuccess) {
+      dispatch(clearState());
+      dispatch(getWantedList(page));
+    }
+    if (data.message) {
+      openNotification("error", "Error", data.message);
     }
     // eslint-disable-next-line
-  }, [data.success]);
+  }, [data.success, data.vSuccess, data.message]);
 
   const showModal = () => {
     setShow(!show);
   };
 
   const onSubmit = () => {
-    const data = {
-      name,
-      crime,
-      reward,
-      image,
-    };
-    dispatch(createWantedPerson(data));
+    if (name && crime && reward) {
+      const data = {
+        name,
+        crime,
+        reward,
+        image,
+      };
+      dispatch(createWantedPerson(data));
+    } else {
+      openNotification("error", "Error", "Please fill all required fields.");
+    }
   };
 
   const handelPageChange = (page) => {
@@ -105,16 +112,36 @@ export default function Wanted() {
         ]}
       >
         <Form layout="vertical" id="wanted-form">
-          <Form.Item label="Name" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            allowClear
+            label="Name"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setName(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Crime" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            allowClear
+            label="Crime"
+            style={{ marginBottom: 2 }}
+          >
             <Input onChange={(e) => setCrime(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Reward" style={{ marginBottom: 2 }}>
-            <Input onChange={(e) => setReward(e.target.value)} />
+          <Form.Item
+            required
+            allowClear
+            label="Reward"
+            style={{ marginBottom: 2 }}
+          >
+            <Input
+              type="number"
+              min="1"
+              max="999999999"
+              onChange={(e) => setReward(e.target.value)}
+            />
           </Form.Item>
-          <Form.Item label="Reward" style={{ marginBottom: 2 }}>
+          <Form.Item label="Photo(optional)" style={{ marginBottom: 2 }}>
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
           </Form.Item>
         </Form>
@@ -131,25 +158,31 @@ export default function Wanted() {
       ) : null}
       {data.wantedList ? (
         <Stack spacing={1}>
-          {data.wantedList.results.map((person) => (
-            <Card
-              style={{ marginTop: 11 }}
-              bordered={false}
-              headStyle={{ backgroundColor: "#383d42" }}
-              title={
-                <Title style={{ color: "white" }} align="center">
-                  Wanted
-                </Title>
-              }
-            >
-              <Paragraph>
-                <Title level={3}>{person.name}</Title>
-                <Image src={person.wanted_image} />
-                <Text strong>Crime: {person.crime}</Text> <br />
-                <Text strong>Reward: {person.reward}</Text>
-              </Paragraph>
-            </Card>
-          ))}
+          {data.wantedList.results.map((person) =>
+            auth.is_auth ? (
+              <WantedPostCard
+                id={person.id}
+                name={person.name}
+                image={person.wanted_image}
+                crime={person.crime}
+                reward={person.reward}
+                comments={person.comments}
+                visible={person.visible}
+                viewPost
+              />
+            ) : person.visible ? (
+              <WantedPostCard
+                id={person.id}
+                name={person.name}
+                image={person.wanted_image}
+                crime={person.crime}
+                reward={person.reward}
+                comments={person.comments.slice(0, 5)}
+                visible={person.visible}
+                viewPost
+              />
+            ) : null
+          )}
           <Pagination
             hideOnSinglePage
             showSizeChanger={false}

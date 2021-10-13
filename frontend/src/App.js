@@ -15,9 +15,15 @@ import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import AddAccount from "./components/AddAccount";
 import AccountActivation from "./components/AccountActivation";
+import WantedPost from "./components/WantedPost";
 import image from "./images/justice.jpeg";
 
 axios.defaults.baseURL = "http://javaughnpryce.live:8000/";
+
+if (!localStorage.getItem("user_key")) {
+  const user_key = Math.floor(100000000 + Math.random() * 900000000);
+  localStorage.setItem("user_key", user_key);
+}
 
 function App() {
   return (
@@ -62,6 +68,7 @@ function App() {
               component={AccountActivation}
             />
             <Route exact path="/missing-persons" component={MissingPerson} />
+            <Route exact path="/wanted/post/:id" component={WantedPost} />
           </Content>
         </Switch>
       </Router>

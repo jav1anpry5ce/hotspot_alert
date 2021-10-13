@@ -4,7 +4,12 @@ import { Button, Modal, Select, Form, Input, Pagination } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getPosts, createPost, clearState } from "../../store/postSlice";
+import {
+  getPosts,
+  createPost,
+  clearState,
+  resetSuccess,
+} from "../../store/postSlice";
 import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
@@ -27,6 +32,7 @@ const crimeData = [
 
 export default function Home() {
   const data = useSelector((state) => state.post);
+  const auth = useSelector((state) => state.auth);
   const history = useHistory();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -52,20 +58,26 @@ export default function Home() {
 
   useEffect(() => {
     if (data.success) {
-      document.getElementById("create-course-form").reset();
       dispatch(clearState());
       dispatch(getPosts(1));
       showModal();
       setTitle("");
       setDescription("");
+      setOption1("");
+      setOption2("");
+      setOption3("");
       setImage(null);
       openNotification("success", "Success", "Post created!");
     }
     if (data.message) {
       openNotification("error", "Error", data.message);
     }
+    if (data.vSuccess) {
+      dispatch(resetSuccess());
+      dispatch(getPosts(1));
+    }
     // eslint-disable-next-line
-  }, [data.success, data.message]);
+  }, [data.success, data.message, data.vSuccess]);
 
   const showModal = () => {
     setShow(!show);
@@ -73,15 +85,33 @@ export default function Home() {
 
   const onSubmit = () => {
     if (title && description) {
-      const data = {
-        title,
-        description,
-        image,
-        option1,
-        option2,
-        option3,
-      };
-      dispatch(createPost(data));
+      if (title === "Car Theft") {
+        if (option1 && option2 && option3 && image) {
+          const data = {
+            title,
+            description,
+            image,
+            option1,
+            option2,
+            option3,
+          };
+          dispatch(createPost(data));
+        } else {
+          openNotification("error", "Error", "Please fill out all fields.");
+        }
+      } else {
+        const data = {
+          title,
+          description,
+          image,
+          option1,
+          option2,
+          option3,
+        };
+        dispatch(createPost(data));
+      }
+    } else {
+      openNotification("error", "Error", "Please fill out all fields.");
     }
   };
 
@@ -118,7 +148,7 @@ export default function Home() {
           </Button>,
         ]}
       >
-        <Form layout="vertical" id="create-course-form">
+        <Form layout="vertical">
           <Form.Item label="Type of Report" style={{ marginBottom: 2 }}>
             <Select style={{ borderRadius: 30 }} onChange={(e) => setTitle(e)}>
               {crimeData.map((data, index) => (
@@ -147,24 +177,12 @@ export default function Home() {
               </Form.Item>
             </div>
           ) : null}
-          {/* {title === "Missing Person" ? (
-            <div style={{ marginBottom: 2 }}>
-              <Form.Item label="Last Seen Attire" style={{ marginBottom: 2 }}>
-                <Input onChange={(e) => setOption1(e.target.value)} />
-              </Form.Item>
-              <Form.Item label="Gender" style={{ marginBottom: 2 }}>
-                <Input onChange={(e) => setOption2(e.target.value)} />
-              </Form.Item>
-              <Form.Item label="Age" style={{ marginBottom: 2 }}>
-                <Input onChange={(e) => setOption3(e.target.value)} />
-              </Form.Item>
-              <Form.Item label="Last seen location" style={{ marginBottom: 2 }}>
-                <Input onChange={(e) => setOption4(e.target.value)} />
-              </Form.Item>
-            </div>
-          ) : null} */}
           <Form.Item
-            label="Upload an image or video(optional)"
+            label={
+              title === "Car Theft"
+                ? "Upload an image or video"
+                : "Upload an image or video(optional)"
+            }
             style={{ marginBottom: 2 }}
           >
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
@@ -181,24 +199,47 @@ export default function Home() {
       />
       <Stack>
         {data.posts
-          ? data.posts.results.map((post, index) => (
-              <PostCard
-                key={index}
-                id={post.id}
-                author={post.author}
-                postDate={post.created_at}
-                title={post.title}
-                postImage={post.post_image}
-                postVideo={post.post_video}
-                postDescription={post.description}
-                option1={post.option1}
-                option2={post.option2}
-                option3={post.option3}
-                option4={post.option4}
-                comments={post.comments.slice(0, 5)}
-                viewPost
-              />
-            ))
+          ? data.posts.results.map((post, index) =>
+              auth.is_auth ? (
+                <PostCard
+                  key={index}
+                  id={post.id}
+                  author={post.author}
+                  postDate={post.created_at}
+                  title={post.title}
+                  postImage={post.post_image}
+                  postVideo={post.post_video}
+                  postDescription={post.description}
+                  option1={post.option1}
+                  option2={post.option2}
+                  option3={post.option3}
+                  option4={post.option4}
+                  comments={post.comments.slice(0, 5)}
+                  visible={post.visible}
+                  viewPost
+                  userKey={post.user_key}
+                />
+              ) : post.visible ? (
+                <PostCard
+                  key={index}
+                  id={post.id}
+                  author={post.author}
+                  postDate={post.created_at}
+                  title={post.title}
+                  postImage={post.post_image}
+                  postVideo={post.post_video}
+                  postDescription={post.description}
+                  option1={post.option1}
+                  option2={post.option2}
+                  option3={post.option3}
+                  option4={post.option4}
+                  comments={post.comments.slice(0, 5)}
+                  visible={post.visible}
+                  viewPost
+                  userKey={post.user_key}
+                />
+              ) : null
+            )
           : null}
       </Stack>
       <Pagination

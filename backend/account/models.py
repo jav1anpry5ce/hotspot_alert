@@ -50,7 +50,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def profile_image(self):
         if self.profile_photo:
-            return 'http://192.168.0.200:8000' + self.profile_photo.url
+            return 'http://javaughnpryce.live:8000' + self.profile_photo.url
         return ''
 
 

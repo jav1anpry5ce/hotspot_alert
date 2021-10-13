@@ -97,7 +97,7 @@ export default function AddAccount() {
             label="Station Picture"
             name="picture"
             style={{ marginBottom: 13 }}
-            rules={[{ required: true, message: "Please a photo!" }]}
+            rules={[{ required: true, message: "Please select a photo!" }]}
           >
             <Input
               type="file"
