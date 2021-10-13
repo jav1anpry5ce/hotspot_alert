@@ -52,7 +52,7 @@ export default function Navbar() {
   };
   return (
     <NavBar>
-      <NavBar.Body>
+      <div>
         {show ? (
           <Container maxWidth="xls">
             <Nav
@@ -313,7 +313,7 @@ export default function Navbar() {
             ) : null}
           </Container>
         )}
-      </NavBar.Body>
+      </div>
     </NavBar>
   );
 }
