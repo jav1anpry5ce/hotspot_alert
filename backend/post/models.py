@@ -22,6 +22,8 @@ class Post(models.Model):
     option2 = models.CharField(max_length=255, blank=True, null=True)
     option3 = models.CharField(max_length=255, blank=True, null=True)
     option4 = models.CharField(max_length=255, blank=True, null=True)
+    option5 = models.CharField(max_length=255, blank=True, null=True)
+    option6 = models.CharField(max_length=255, blank=True, null=True)
     comments = models.ManyToManyField('Comment')
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)

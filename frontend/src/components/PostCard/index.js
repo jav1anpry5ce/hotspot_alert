@@ -1,19 +1,11 @@
 import React from "react";
 import { Stack } from "@mui/material";
-import {
-  Card,
-  Avatar,
-  Typography,
-  Button,
-  Image,
-  Comment,
-  Form,
-  Tooltip,
-} from "antd";
+import { Card, Avatar, Typography, Button, Image, Comment, Form } from "antd";
 import { TextArea } from "./Elements";
-import moment from "moment";
 import ReactPlayer from "react-player";
 import { useHistory } from "react-router-dom";
+import { setActiveKey } from "../../store/navSlice";
+import { useDispatch } from "react-redux";
 const { Meta } = Card;
 const { Text, Paragraph, Title } = Typography;
 
@@ -29,6 +21,8 @@ export default function PostCard({
   option2,
   option3,
   option4,
+  option5,
+  option6,
   comments,
   addComment,
   loading,
@@ -37,6 +31,12 @@ export default function PostCard({
   viewPost,
 }) {
   const history = useHistory();
+  const dispatch = useDispatch();
+  if (title === "Missing Person") {
+    dispatch(setActiveKey("2"));
+  } else {
+    dispatch(setActiveKey("1"));
+  }
   return (
     <Card
       style={{
@@ -105,6 +105,7 @@ export default function PostCard({
             </div>
           ) : title === "Missing Person" ? (
             <div>
+              <br />
               <Text strong>Last seen attire: {option1}</Text>
               <br />
               <Text strong>Gender: {option2}</Text>
@@ -112,6 +113,10 @@ export default function PostCard({
               <Text strong>Age: {option3}</Text>
               <br />
               <Text strong>Last seen location: {option4}</Text>
+              <br />
+              <Text strong>
+                You many contact {option5} at {option6} or the police.
+              </Text>
             </div>
           ) : null}
           {comments
@@ -155,11 +160,7 @@ export default function PostCard({
                     <p style={{ marginTop: -5 }}>{comment.description}</p>
                   }
                   datetime={
-                    <Tooltip title={moment().format("YYYY-MM-DD HH:mm")}>
-                      <span>
-                        {new Date(comment.created_at).toLocaleString()}
-                      </span>
-                    </Tooltip>
+                    <span>{new Date(comment.created_at).toLocaleString()}</span>
                   }
                 />
               ))
@@ -182,7 +183,11 @@ export default function PostCard({
         </Form>
       ) : null}
       {viewPost ? (
-        <Button type="primary" onClick={() => history.push(`/post/${id}`)}>
+        <Button
+          type="primary"
+          onClick={() => history.push(`/post/${id}`)}
+          style={{ marginTop: 13 }}
+        >
           View Post
         </Button>
       ) : null}

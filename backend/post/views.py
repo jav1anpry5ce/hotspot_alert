@@ -10,38 +10,61 @@ from .models import Post, Author, Comment
 from .serializers import PostSerializer, CreatePostSerializer
 
 class PostViewSet(ListAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().exclude(title='Missing Person')
+    serializer_class = PostSerializer
+
+
+class MissingPersonViewSet(ListAPIView):
+    queryset = Post.objects.filter(title='Missing Person')
     serializer_class = PostSerializer
 
 
 class PostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
-        print(request.data)
-        serializer = CreatePostSerializer(data=request.data)
-        if serializer.is_valid():
-            if request.user.is_authenticated:
-                author = Author.objects.get(account=request.user)
-                serializer.save(author=author)
+        try:
+            if request.data.get('title') == 'Missing Person':
+                if request.user.is_authenticated:
+                    serializer = CreatePostSerializer(data=request.data)
+                    if serializer.is_valid():
+                        author = Author.objects.get(account=request.user)
+                        serializer.save(author=author)
+                        return Response(status=status.HTTP_201_CREATED)
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'Message': 'You are not authorized to create a missing person.'}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                serializer = CreatePostSerializer(data=request.data)
+                if serializer.is_valid():
+                    if request.user.is_authenticated:
+                        author = Author.objects.get(account=request.user)
+                        serializer.save(author=author)
+                    else:
+                        serializer.save()
+                    return Response(status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def get_post(request, id):
-    post = Post.objects.get(id=id)
-    serializer = PostSerializer(post)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    try:
+        post = Post.objects.get(id=id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response({'Message': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def add_comment(request):
-    if request.user.is_authenticated:
-        author = Author.objects.get(account=request.user)
-        comment = Comment.objects.create(description=request.data.get('description'), author=author)
-    else:
-        comment = Comment.objects.create(description=request.data.get('description'))
-    post = Post.objects.get(id=request.data.get('id'))
-    post.comments.add(comment)
-    serializer = PostSerializer(post)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    try:
+        if request.user.is_authenticated:
+            author = Author.objects.get(account=request.user)
+            comment = Comment.objects.create(description=request.data.get('description'), author=author)
+        else:
+            comment = Comment.objects.create(description=request.data.get('description'))
+        post = Post.objects.get(id=request.data.get('id'))
+        post.comments.add(comment)
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except:
+        return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)

@@ -16,7 +16,6 @@ const { TextArea } = Input;
 const crimeData = [
   { label: "Burglary", value: "Burglary" },
   { label: "Shooting", value: "Shooting" },
-  { label: "Missing Person", value: "Missing Person" },
   { label: "Theft", value: "Theft" },
   { label: "Car Theft", value: "Car Theft" },
   { label: "Rape", value: "Rape" },
@@ -37,7 +36,6 @@ export default function Home() {
   const [option1, setOption1] = useState("");
   const [option2, setOption2] = useState("");
   const [option3, setOption3] = useState("");
-  const [option4, setOption4] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -61,6 +59,7 @@ export default function Home() {
       setTitle("");
       setDescription("");
       setImage(null);
+      openNotification("success", "Success", "Post created!");
     }
     if (data.message) {
       openNotification("error", "Error", data.message);
@@ -81,7 +80,6 @@ export default function Home() {
         option1,
         option2,
         option3,
-        option4,
       };
       dispatch(createPost(data));
     }
@@ -149,7 +147,7 @@ export default function Home() {
               </Form.Item>
             </div>
           ) : null}
-          {title === "Missing Person" ? (
+          {/* {title === "Missing Person" ? (
             <div style={{ marginBottom: 2 }}>
               <Form.Item label="Last Seen Attire" style={{ marginBottom: 2 }}>
                 <Input onChange={(e) => setOption1(e.target.value)} />
@@ -164,7 +162,7 @@ export default function Home() {
                 <Input onChange={(e) => setOption4(e.target.value)} />
               </Form.Item>
             </div>
-          ) : null}
+          ) : null} */}
           <Form.Item
             label="Upload an image or video(optional)"
             style={{ marginBottom: 2 }}

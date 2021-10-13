@@ -7,6 +7,7 @@ import { RiCriminalFill, RiUserAddLine } from "react-icons/ri";
 import { FcSettings } from "react-icons/fc";
 import { GoSignOut } from "react-icons/go";
 import { FaBars } from "react-icons/fa";
+import { BsPersonXFill } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/authSlice";
@@ -29,11 +30,14 @@ export default function Navbar() {
       setShow(true);
     }
     if (expand) {
-      setHeight(215);
+      setHeight("100vh");
     } else {
       setHeight(43);
     }
-  }, [expand]);
+    if (auth.is_auth && expand) {
+      setHeight("100vh");
+    }
+  }, [expand, auth.is_auth]);
 
   const resize = () => {
     if (window.innerWidth <= 760) {
@@ -70,8 +74,20 @@ export default function Navbar() {
                 Home
               </Item>
               <Item
-                style={{ display: "flex", justifyContent: "center" }}
                 eventKey="2"
+                style={{ display: "flex", justifyContent: "center" }}
+                icon={
+                  <BsPersonXFill
+                    style={{ marginRight: 3, fontSize: 16, marginTop: 3 }}
+                  />
+                }
+                onClick={() => history.push("/missing-persons")}
+              >
+                Missing Persons
+              </Item>
+              <Item
+                style={{ display: "flex", justifyContent: "center" }}
+                eventKey="3"
                 icon={
                   <RiCriminalFill
                     style={{ marginRight: 3, fontSize: 16, marginTop: 4 }}
@@ -83,7 +99,7 @@ export default function Navbar() {
               </Item>
               {auth.is_admin ? (
                 <Item
-                  eventKey="3"
+                  eventKey="4"
                   icon={
                     <RiUserAddLine
                       style={{ marginRight: 3, fontSize: 16, marginBottom: -2 }}
@@ -133,7 +149,7 @@ export default function Navbar() {
                     }
                   >
                     <Dropdown.Item
-                      eventKey="4"
+                      eventKey="5"
                       onClick={() => history.push("/account/change-password")}
                     >
                       Change password
@@ -166,12 +182,14 @@ export default function Navbar() {
                 spacing={2}
                 style={{
                   animation: expand ? "fadeIn ease 2s" : "fadeOut ease 2s",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
                 <Grid
                   item
-                  xs={12}
-                  style={{ display: "flex", justifyContent: "center" }}
+                  xs={6}
+                  // style={{ display: "flex", justifyContent: "center" }}
                 >
                   <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                     <Item
@@ -194,6 +212,25 @@ export default function Navbar() {
                     </Item>
                     <Item
                       eventKey="2"
+                      style={{ display: "flex", justifyContent: "center" }}
+                      icon={
+                        <BsPersonXFill
+                          style={{
+                            marginRight: 3,
+                            fontSize: 16,
+                            marginTop: 3,
+                          }}
+                        />
+                      }
+                      onClick={() => {
+                        history.push("/missing-persons");
+                        setExpand(!expand);
+                      }}
+                    >
+                      Missing Persons
+                    </Item>
+                    <Item
+                      eventKey="3"
                       icon={
                         <RiCriminalFill
                           style={{
@@ -213,7 +250,7 @@ export default function Navbar() {
                     {auth.is_admin ? (
                       <div>
                         <Item
-                          eventKey="3"
+                          eventKey="4"
                           icon={
                             <RiUserAddLine
                               style={{
@@ -258,7 +295,7 @@ export default function Navbar() {
                             }
                           >
                             <Dropdown.Item
-                              eventKey="4"
+                              eventKey="5"
                               onClick={() => {
                                 history.push("/account/change-password");
                                 setExpand(!expand);

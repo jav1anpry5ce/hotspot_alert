@@ -14,6 +14,22 @@ export const getPosts = createAsyncThunk("get/posts", async (page) => {
   }
 });
 
+export const getMissingPersons = createAsyncThunk(
+  "get/missing/person",
+  async (page) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.get(`api/missing-person?page=${page}`, config);
+    if (response.status === 200) {
+      const data = response.data;
+      return { data };
+    }
+  }
+);
+
 export const createPost = createAsyncThunk(
   "create/post",
   async (data, { rejectWithValue }) => {
@@ -24,6 +40,7 @@ export const createPost = createAsyncThunk(
           Authorization: "Token " + sessionStorage.getItem("token"),
         },
       };
+      console.log(data);
       let formData = new FormData();
       if (data.image) {
         formData.append("title", data.title);
@@ -32,6 +49,8 @@ export const createPost = createAsyncThunk(
         formData.append("option2", data.option2);
         formData.append("option3", data.option3);
         formData.append("option4", data.option4);
+        formData.append("option5", data.option5);
+        formData.append("option6", data.option6);
         if (data.image.type.includes("image")) {
           formData.append("image", data.image);
         } else if (data.image.type.includes("video")) {
@@ -46,6 +65,8 @@ export const createPost = createAsyncThunk(
         formData.append("option2", data.option2);
         formData.append("option3", data.option3);
         formData.append("option4", data.option4);
+        formData.append("option5", data.option5);
+        formData.append("option6", data.option6);
       }
       try {
         await axios.post("/api/create-post/", formData, config);
@@ -150,6 +171,7 @@ export const postSlice = createSlice({
     success: false,
     posts: null,
     post: null,
+    missingPersons: null,
     message: null,
   },
   reducers: {
@@ -158,6 +180,7 @@ export const postSlice = createSlice({
       state.cLoading = false;
       state.success = false;
       state.posts = null;
+      state.missingPersons = null;
       state.post = null;
       state.message = null;
     },
@@ -189,6 +212,10 @@ export const postSlice = createSlice({
       state.success = false;
       if (payload.image) {
         state.message = "Please upload a photo or a video.";
+      } else if (payload.Message) {
+        state.message = payload.Message;
+      } else {
+        state.message = "Something went wrong!";
       }
     },
     [getPost.pending]: (state) => {
@@ -199,6 +226,16 @@ export const postSlice = createSlice({
       state.post = payload.data;
     },
     [getPost.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+    [getMissingPersons.pending]: (state) => {
+      state.loading = true;
+    },
+    [getMissingPersons.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.missingPersons = payload.data;
+    },
+    [getMissingPersons.rejected]: (state) => {
       state.loading = false;
     },
     [addComment.pending]: (state) => {

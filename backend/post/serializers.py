@@ -38,6 +38,8 @@ class PostSerializer(serializers.ModelSerializer):
             'option2',
             'option3',
             'option4',
+            'option5',
+            'option6',
             'comments',
             'post_image',
             'post_video',
@@ -54,5 +56,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
             'option2',
             'option3',
             'option4',
+            'option5',
+            'option6',
             'video',
         )

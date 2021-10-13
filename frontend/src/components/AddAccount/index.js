@@ -20,7 +20,7 @@ export default function AddAccount() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    dispatch(setActiveKey("3"));
+    dispatch(setActiveKey("4"));
     if (!auth.is_admin) {
       history.push("/");
     }

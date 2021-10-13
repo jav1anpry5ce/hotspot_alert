@@ -10,13 +10,14 @@ import Post from "./components/Post";
 import SignIn from "./components/SignIn";
 import ChangePassword from "./components/ChangePassword";
 import Wanted from "./components/Wanted";
+import MissingPerson from "./components/MissingPerson";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import AddAccount from "./components/AddAccount";
 import AccountActivation from "./components/AccountActivation";
 import image from "./images/justice.jpeg";
 
-axios.defaults.baseURL = "http://192.168.0.200:8000/";
+axios.defaults.baseURL = "http://javaughnpryce.live:8000/";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
               path="/account/activation/:activate/:token"
               component={AccountActivation}
             />
+            <Route exact path="/missing-persons" component={MissingPerson} />
           </Content>
         </Switch>
       </Router>

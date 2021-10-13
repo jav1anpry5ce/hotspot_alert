@@ -61,6 +61,8 @@ export default function Post({ match }) {
           option2={data.post.option2}
           option3={data.post.option3}
           option4={data.post.option4}
+          option5={data.post.option5}
+          option6={data.post.option6}
           comments={data.post.comments}
           addComment
           loading={data.cLoading}

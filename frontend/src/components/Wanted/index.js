@@ -37,7 +37,7 @@ export default function Wanted() {
 
   useEffect(() => {
     dispatch(getWantedList(page));
-    dispatch(setActiveKey("2"));
+    dispatch(setActiveKey("3"));
     // eslint-disable-next-line
   }, []);
 

@@ -20,7 +20,7 @@ export default function ChangePassword() {
     if (!auth.is_auth) {
       history.push("/account/signin");
     }
-    dispatch(setActiveKey("4"));
+    dispatch(setActiveKey("5"));
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, [auth.is_auth]);
