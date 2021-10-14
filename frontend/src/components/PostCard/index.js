@@ -85,6 +85,7 @@ export default function PostCard({
                 ? author.account.profile_image
                 : "https://i1.sndcdn.com/avatars-000245472345-2odmx5-t240x240.jpg"
             }
+            alt="img"
           />
         }
         title={
@@ -149,7 +150,7 @@ export default function PostCard({
           <Title level={3}>{title}</Title>
           {postImage ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Image src={postImage} width={250} />
+              <Image alt={postImage} src={postImage} width={250} />
             </div>
           ) : postVideo ? (
             <div style={{ display: "flex", justifyContent: "center" }}>

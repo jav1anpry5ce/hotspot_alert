@@ -85,7 +85,7 @@ export default function WantedPostCard({
       <Paragraph>
         <Title level={3}>{name}</Title>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Image width={350} src={image} />
+          <Image width={350} src={image} alt={image} />
         </div>
         <Text strong>Crime: {crime}</Text> <br />
         <Text strong>Reward: ${reward}</Text>
