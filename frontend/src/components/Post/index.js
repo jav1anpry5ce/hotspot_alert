@@ -46,9 +46,9 @@ export default function Post({ match }) {
   useEffect(() => {
     if (data.post) {
       if (data.post.title === "Missing Person") {
-        dispatch(setActiveKey("2"));
+        dispatch(setActiveKey("4"));
       } else {
-        dispatch(setActiveKey("1"));
+        dispatch(setActiveKey("3"));
       }
     }
     // eslint-disable-next-line

@@ -4,21 +4,24 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Container, Header, Content } from "rsuite";
 import { BackTop } from "antd";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import Posts from "./components/Posts";
-import Post from "./components/Post";
-import SignIn from "./components/SignIn";
-import ChangePassword from "./components/ChangePassword";
-import Wanted from "./components/Wanted";
-import MissingPerson from "./components/MissingPerson";
-import ForgotPassword from "./components/ForgotPassword";
-import ResetPassword from "./components/ResetPassword";
-import AddAccount from "./components/AddAccount";
-import AccountActivation from "./components/AccountActivation";
-import WantedPost from "./components/WantedPost";
-import Chats from "./components/Chats";
-import Chat from "./components/Chat";
+import {
+  Navbar,
+  Home,
+  Posts,
+  Post,
+  SignIn,
+  ChangePassword,
+  Wanted,
+  MissingPerson,
+  ForgotPassword,
+  ResetPassword,
+  AddAccount,
+  AccountActivation,
+  WantedPost,
+  Chats,
+  Chat,
+} from "./components";
+
 import image from "./images/justice.jpeg";
 
 axios.defaults.baseURL = "http://javaughnpryce.live:8000/";

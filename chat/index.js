@@ -19,7 +19,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "http://javaughnpryce.live:8081",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -115,6 +115,11 @@ io.on("connect", (socket) => {
   socket.on("disconnect", () => {
     try {
       const user = removeUser(socket.id);
+      const usersInRoom = getUsersInRoom(user.room);
+      if (usersInRoom.length === 0) {
+        deleteRoom(user.room);
+        io.emit("You can update");
+      }
 
       if (user) {
         io.to(user.room).emit("message", {
@@ -132,6 +137,6 @@ io.on("connect", (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 5000, "192.168.1.200", () =>
+server.listen(process.env.PORT || 5000, process.env.IP, () =>
   console.log(`Server has started.`)
 );

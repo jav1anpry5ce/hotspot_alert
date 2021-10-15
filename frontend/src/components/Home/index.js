@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "@mui/material";
 import { Typography } from "antd";
+import { useDispatch } from "react-redux";
+import { setActiveKey } from "../../store/navSlice";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
-export default function index() {
+export default function Home() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setActiveKey("1"));
+    // eslint-disable-next-line
+  }, []);
   return (
     <Container
       maxWidth="xls"
