@@ -1,0 +1,8 @@
+.messages {
+  overflow: auto;
+  flex: auto;
+  height: 70.9vh;
+}
+.message::-webkit-scrollbar {
+  display: none;
+}

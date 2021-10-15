@@ -28,7 +28,7 @@ export default function Wanted() {
 
   useEffect(() => {
     dispatch(getWantedList(page));
-    dispatch(setActiveKey("3"));
+    dispatch(setActiveKey("5"));
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
@@ -158,9 +158,10 @@ export default function Wanted() {
       ) : null}
       {data.wantedList ? (
         <Stack spacing={1}>
-          {data.wantedList.results.map((person) =>
+          {data.wantedList.results.map((person, index) =>
             auth.is_auth ? (
               <WantedPostCard
+                key={index}
                 id={person.id}
                 name={person.name}
                 image={person.wanted_image}
@@ -172,6 +173,7 @@ export default function Wanted() {
               />
             ) : person.visible ? (
               <WantedPostCard
+                key={index}
                 id={person.id}
                 name={person.name}
                 image={person.wanted_image}

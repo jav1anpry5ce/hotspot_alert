@@ -40,7 +40,7 @@ export default function MissingPerson() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(setActiveKey("2"));
+    dispatch(setActiveKey("4"));
     dispatch(getMissingPersons(page));
     return () => dispatch(clearState());
     // eslint-disable-next-line

@@ -8,6 +8,8 @@ import { FcSettings } from "react-icons/fc";
 import { GoSignOut } from "react-icons/go";
 import { FaBars } from "react-icons/fa";
 import { BsPersonXFill } from "react-icons/bs";
+import { MdMessage } from "react-icons/md";
+import { CgFeed } from "react-icons/cg";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/authSlice";
@@ -75,6 +77,32 @@ export default function Navbar() {
               </Item>
               <Item
                 eventKey="2"
+                align="center"
+                style={{ display: "flex", justifyContent: "center" }}
+                icon={
+                  <MdMessage
+                    style={{ marginRight: 3, fontSize: 16, marginTop: 5 }}
+                  />
+                }
+                onClick={() => history.push("/chats")}
+              >
+                Emergency Chat
+              </Item>
+              <Item
+                eventKey="3"
+                align="center"
+                style={{ display: "flex", justifyContent: "center" }}
+                icon={
+                  <CgFeed
+                    style={{ marginRight: 3, fontSize: 16, marginTop: 4 }}
+                  />
+                }
+                onClick={() => history.push("/posts")}
+              >
+                Posts
+              </Item>
+              <Item
+                eventKey="4"
                 style={{ display: "flex", justifyContent: "center" }}
                 icon={
                   <BsPersonXFill
@@ -87,7 +115,7 @@ export default function Navbar() {
               </Item>
               <Item
                 style={{ display: "flex", justifyContent: "center" }}
-                eventKey="3"
+                eventKey="5"
                 icon={
                   <RiCriminalFill
                     style={{ marginRight: 3, fontSize: 16, marginTop: 4 }}
@@ -99,7 +127,7 @@ export default function Navbar() {
               </Item>
               {auth.is_admin ? (
                 <Item
-                  eventKey="4"
+                  eventKey="6"
                   icon={
                     <RiUserAddLine
                       style={{ marginRight: 3, fontSize: 16, marginBottom: -2 }}
@@ -149,7 +177,7 @@ export default function Navbar() {
                     }
                   >
                     <Dropdown.Item
-                      eventKey="5"
+                      eventKey="7"
                       onClick={() => history.push("/account/change-password")}
                     >
                       Change password
@@ -212,6 +240,38 @@ export default function Navbar() {
                     </Item>
                     <Item
                       eventKey="2"
+                      align="center"
+                      style={{ display: "flex", justifyContent: "center" }}
+                      icon={
+                        <MdMessage
+                          style={{ marginRight: 3, fontSize: 16, marginTop: 5 }}
+                        />
+                      }
+                      onClick={() => {
+                        history.push("/chats");
+                        setExpand(!expand);
+                      }}
+                    >
+                      Emergency Chat
+                    </Item>
+                    <Item
+                      eventKey="3"
+                      align="center"
+                      style={{ display: "flex", justifyContent: "center" }}
+                      icon={
+                        <CgFeed
+                          style={{ marginRight: 3, fontSize: 16, marginTop: 4 }}
+                        />
+                      }
+                      onClick={() => {
+                        history.push("/posts");
+                        setExpand(!expand);
+                      }}
+                    >
+                      Posts
+                    </Item>
+                    <Item
+                      eventKey="4"
                       style={{ display: "flex", justifyContent: "center" }}
                       icon={
                         <BsPersonXFill
@@ -230,7 +290,7 @@ export default function Navbar() {
                       Missing Persons
                     </Item>
                     <Item
-                      eventKey="3"
+                      eventKey="5"
                       icon={
                         <RiCriminalFill
                           style={{
@@ -250,7 +310,7 @@ export default function Navbar() {
                     {auth.is_admin ? (
                       <div>
                         <Item
-                          eventKey="4"
+                          eventKey="6"
                           icon={
                             <RiUserAddLine
                               style={{
@@ -295,7 +355,7 @@ export default function Navbar() {
                             }
                           >
                             <Dropdown.Item
-                              eventKey="5"
+                              eventKey="7"
                               onClick={() => {
                                 history.push("/account/change-password");
                                 setExpand(!expand);

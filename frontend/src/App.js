@@ -6,6 +6,7 @@ import { BackTop } from "antd";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
+import Posts from "./components/Posts";
 import Post from "./components/Post";
 import SignIn from "./components/SignIn";
 import ChangePassword from "./components/ChangePassword";
@@ -16,6 +17,8 @@ import ResetPassword from "./components/ResetPassword";
 import AddAccount from "./components/AddAccount";
 import AccountActivation from "./components/AccountActivation";
 import WantedPost from "./components/WantedPost";
+import Chats from "./components/Chats";
+import Chat from "./components/Chat";
 import image from "./images/justice.jpeg";
 
 axios.defaults.baseURL = "http://javaughnpryce.live:8000/";
@@ -43,6 +46,7 @@ function App() {
           <Content style={{ overflow: "auto" }}>
             <BackTop />
             <Route exact path="/" component={Home} />
+            <Route exact path="/posts" component={Posts} />
             <Route exact path="/post/:post_id" component={Post} />
             <Route exact path="/account/signin" component={SignIn} />
             <Route
@@ -69,6 +73,8 @@ function App() {
             />
             <Route exact path="/missing-persons" component={MissingPerson} />
             <Route exact path="/wanted/post/:id" component={WantedPost} />
+            <Route exact path="/chats" component={Chats} />
+            <Route exact path="/chat/:room_id" component={Chat} />
           </Content>
         </Switch>
       </Router>

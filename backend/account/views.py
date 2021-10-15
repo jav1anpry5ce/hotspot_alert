@@ -104,6 +104,7 @@ def login(request):
                     "auth_token": token.key, 
                     "username": user.name,
                     "is_admin": user.is_admin,
+                    'security_token': '5090de76-fdf0-47ee-8c69-8735be0807b7',
                     }, status=status.HTTP_200_OK)
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -116,6 +117,7 @@ def login(request):
                     "auth_token": token.key, 
                     "username": user.name, 
                     "is_admin": user.is_admin, 
+                    'security_token': '5090de76-fdf0-47ee-8c69-8735be0807b7',
                     })
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_404_NOT_FOUND)
     except:

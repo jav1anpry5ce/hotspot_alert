@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from rest_framework import permissions
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, username, password, **extra_fields):
