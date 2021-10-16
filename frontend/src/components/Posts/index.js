@@ -115,10 +115,14 @@ export default function Posts() {
           image,
         };
       }
-      if (!image.size > 31457280) {
-        dispatch(createPost(data));
+      if (image) {
+        if (!image.size > 31457280) {
+          dispatch(createPost(data));
+        } else {
+          openNotification("error", "Error", "Selected file is too large.");
+        }
       } else {
-        openNotification("error", "Error", "Selected file is too large.");
+        dispatch(createPost(data));
       }
     } else {
       openNotification("error", "Error", "Please fill out all fields.");
