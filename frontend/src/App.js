@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Container, Header, Content } from "rsuite";
-import { BackTop } from "antd";
 import "./App.css";
 import {
   Navbar,
@@ -47,7 +46,6 @@ function App() {
         </Header>
         <Switch>
           <Content style={{ overflow: "auto" }}>
-            <BackTop />
             <Route exact path="/" component={Home} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/post/:post_id" component={Post} />

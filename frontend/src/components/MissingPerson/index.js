@@ -12,6 +12,7 @@ import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
 import Loading from "../Loading";
+import ChatButton from "../ChatButton";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -211,15 +212,20 @@ export default function MissingPerson() {
         </Form>
       </Modal>
       {auth.is_auth ? (
-        <Button
-          onClick={showModal}
-          style={{ position: "fixed", right: 20, bottom: 55, zIndex: 1 }}
-          type="primary"
-          shape="circle"
-          size="large"
-          icon={<PlusOutlined style={{ fontSize: 28 }} />}
-        />
-      ) : null}
+        <div>
+          <Button
+            onClick={showModal}
+            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
+            type="primary"
+            shape="circle"
+            size="large"
+            icon={<PlusOutlined style={{ fontSize: 28 }} />}
+          />
+          <ChatButton bottom={80} />
+        </div>
+      ) : (
+        <ChatButton bottom={20} />
+      )}
       <Stack>
         {data.missingPersonsResults
           ? data.missingPersonsResults.map((person, index) => {

@@ -8,6 +8,7 @@ import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
 import Loading from "../Loading";
+import ChatButton from "../ChatButton";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -215,9 +216,10 @@ export default function Posts() {
           </Form.Item>
         </Form>
       </Modal>
+      <ChatButton bottom={80} />
       <Button
         onClick={showModal}
-        style={{ position: "fixed", right: 20, bottom: 55, zIndex: 1 }}
+        style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
         type="primary"
         shape="circle"
         size="large"

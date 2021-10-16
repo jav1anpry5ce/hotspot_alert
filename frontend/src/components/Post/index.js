@@ -11,6 +11,7 @@ import {
 import PostCard from "../PostCard";
 import Loading from "../Loading";
 import { setActiveKey } from "../../store/navSlice";
+import ChatButton from "../ChatButton";
 
 const { Title } = Typography;
 
@@ -70,6 +71,7 @@ export default function Post({ match }) {
   }
   return (
     <Container maxWidth="sm">
+      <ChatButton bottom={20} />
       {data.post ? (
         auth.is_admin ? (
           <PostCard

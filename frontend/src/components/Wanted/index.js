@@ -13,6 +13,7 @@ import { setActiveKey } from "../../store/navSlice";
 import WantedPostCard from "../WantedPostCard";
 import { openNotification } from "../../functions/Notification";
 import { Typography } from "antd";
+import ChatButton from "../ChatButton";
 
 const { Title } = Typography;
 
@@ -158,15 +159,20 @@ export default function Wanted() {
         </Form>
       </Modal>
       {auth.is_auth ? (
-        <Button
-          onClick={showModal}
-          style={{ position: "fixed", right: 20, bottom: 55, zIndex: 1 }}
-          type="primary"
-          shape="circle"
-          size="large"
-          icon={<PlusOutlined style={{ fontSize: 28 }} />}
-        />
-      ) : null}
+        <div>
+          <Button
+            onClick={showModal}
+            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
+            type="primary"
+            shape="circle"
+            size="large"
+            icon={<PlusOutlined style={{ fontSize: 28 }} />}
+          />
+          <ChatButton bottom={80} />
+        </div>
+      ) : (
+        <ChatButton bottom={20} />
+      )}
       <Stack spacing={1}>
         {data.results ? (
           data.results.map((person, index) => {

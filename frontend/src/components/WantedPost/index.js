@@ -10,6 +10,7 @@ import Loading from "../Loading";
 import { setActiveKey } from "../../store/navSlice";
 import WantedPostCard from "../WantedPostCard";
 import { Typography } from "antd";
+import ChatButton from "../ChatButton";
 
 const { Title } = Typography;
 
@@ -57,6 +58,7 @@ export default function WantedPost({ match }) {
   }
   return (
     <Container maxWidth="sm">
+      <ChatButton bottom={20} />
       {data.wantedPost ? (
         <WantedPostCard
           id={data.wantedPost.id}
