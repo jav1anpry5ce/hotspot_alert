@@ -71,7 +71,7 @@ export default function Post({ match }) {
   }
   return (
     <Container maxWidth="sm">
-      <ChatButton bottom={20} />
+      <ChatButton bottom={30} />
       {data.post ? (
         auth.is_admin ? (
           <PostCard

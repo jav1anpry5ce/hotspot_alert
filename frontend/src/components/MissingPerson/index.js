@@ -53,6 +53,7 @@ export default function MissingPerson() {
     if (data.success) {
       dispatch(clearState());
       setPage(1);
+      dispatch(getMissingPersons(1));
       showModal();
       openNotification("success", "Success", "Missing person post created!");
       setDescription("");
@@ -92,7 +93,7 @@ export default function MissingPerson() {
         option5,
         option6,
       };
-      if (!image.size > 31457280) dispatch(createPost(data));
+      if (image.size <= 71457280) dispatch(createPost(data));
       else openNotification("error", "Error", "Selected fill is too large.");
     } else {
       openNotification("error", "Error", "Please fill all required fields.");
@@ -215,16 +216,16 @@ export default function MissingPerson() {
         <div>
           <Button
             onClick={showModal}
-            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
+            style={{ position: "fixed", right: 25, bottom: 30, zIndex: 1 }}
             type="primary"
             shape="circle"
             size="large"
             icon={<PlusOutlined style={{ fontSize: 28 }} />}
           />
-          <ChatButton bottom={80} />
+          <ChatButton bottom={90} />
         </div>
       ) : (
-        <ChatButton bottom={20} />
+        <ChatButton bottom={30} />
       )}
       <Stack>
         {data.missingPersonsResults

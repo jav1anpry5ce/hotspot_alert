@@ -53,8 +53,9 @@ export default function Posts() {
 
   useEffect(() => {
     if (data.success) {
-      setPage(1);
       dispatch(clearState());
+      setPage(1);
+      dispatch(getPosts(1));
       showModal();
       setTitle("");
       setDescription("");
@@ -113,7 +114,7 @@ export default function Posts() {
         };
       }
       if (image) {
-        if (!image.size > 31457280) {
+        if (image.size <= 71457280) {
           dispatch(createPost(data));
         } else {
           openNotification("error", "Error", "Selected file is too large.");
@@ -216,10 +217,10 @@ export default function Posts() {
           </Form.Item>
         </Form>
       </Modal>
-      <ChatButton bottom={80} />
+      <ChatButton bottom={90} />
       <Button
         onClick={showModal}
-        style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
+        style={{ position: "fixed", right: 25, bottom: 30, zIndex: 1 }}
         type="primary"
         shape="circle"
         size="large"

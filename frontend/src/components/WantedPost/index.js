@@ -58,7 +58,7 @@ export default function WantedPost({ match }) {
   }
   return (
     <Container maxWidth="sm">
-      <ChatButton bottom={20} />
+      <ChatButton bottom={30} />
       {data.wantedPost ? (
         <WantedPostCard
           id={data.wantedPost.id}

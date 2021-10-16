@@ -45,6 +45,7 @@ export default function Wanted() {
       document.getElementById("wanted-form").reset();
       dispatch(clearState());
       setPage(1);
+      dispatch(getWantedList(1));
       showModal();
       setName("");
       setCrime("");
@@ -70,7 +71,7 @@ export default function Wanted() {
         image,
       };
       if (image) {
-        if (!image.size > 31457280) {
+        if (image.size <= 71457280) {
           dispatch(createWantedPerson(data));
         } else {
           openNotification("error", "Error", "Selected fill is too large.");
@@ -162,16 +163,16 @@ export default function Wanted() {
         <div>
           <Button
             onClick={showModal}
-            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1 }}
+            style={{ position: "fixed", right: 25, bottom: 30, zIndex: 1 }}
             type="primary"
             shape="circle"
             size="large"
             icon={<PlusOutlined style={{ fontSize: 28 }} />}
           />
-          <ChatButton bottom={80} />
+          <ChatButton bottom={90} />
         </div>
       ) : (
-        <ChatButton bottom={20} />
+        <ChatButton bottom={30} />
       )}
       <Stack spacing={1}>
         {data.results ? (

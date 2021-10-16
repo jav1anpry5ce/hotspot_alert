@@ -10,7 +10,7 @@ export default function ChatButton({ bottom }) {
       onClick={() => history.push("/chats")}
       style={{
         position: "fixed",
-        right: 20,
+        right: 25,
         bottom: bottom,
         zIndex: 1,
         backgroundColor: "rgba(0,0,0,0.0)",
