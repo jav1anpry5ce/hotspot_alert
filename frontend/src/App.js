@@ -45,8 +45,8 @@ function App() {
           <Navbar />
         </Header>
         <Switch>
+          <Route exact path="/" component={Home} />
           <Content style={{ overflow: "auto" }}>
-            <Route exact path="/" component={Home} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/post/:post_id" component={Post} />
             <Route exact path="/account/signin" component={SignIn} />

@@ -18,7 +18,7 @@ export default function ChatButton({ bottom }) {
       }}
       shape="circle"
       size="large"
-      icon={<MessageFilled style={{ fontSize: 38, color: "#64748c" }} />}
+      icon={<MessageFilled style={{ fontSize: 38, color: "#5e99e6" }} />}
     />
   );
 }
