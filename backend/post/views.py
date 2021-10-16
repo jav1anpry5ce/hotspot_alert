@@ -12,9 +12,10 @@ from .serializers import PostSerializer, CreatePostSerializer
 from wanted.models import Wanted
 from wanted.serializers import WantedSerializer
 
+
 class PostViewSet(ListAPIView):
     queryset = Post.objects.all().exclude(title='Missing Person')
-    serializer_class = PostSerializer
+    serializer_class = PostSerializer  
 
 
 class MissingPersonViewSet(ListAPIView):

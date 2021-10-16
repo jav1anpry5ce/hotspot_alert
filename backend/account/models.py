@@ -49,7 +49,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def profile_image(self):
         if self.profile_photo:
-            return 'http://javaughnpryce.live:8000' + self.profile_photo.url
+            return 'http://javaughnpryce.live:8001' + self.profile_photo.url
         return ''
 
 

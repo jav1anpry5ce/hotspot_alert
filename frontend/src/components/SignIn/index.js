@@ -17,7 +17,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (auth.is_auth) {
-      history.push("/");
+      history.push("/posts");
     }
     dispatch(setActiveKey(""));
     return () => dispatch(clearState());

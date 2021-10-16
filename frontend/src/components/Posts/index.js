@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Pagination } from "antd";
+import {
+  Button,
+  Modal,
+  Select,
+  Form,
+  Input,
+  Pagination,
+  Typography,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -17,6 +25,7 @@ import Loading from "../Loading";
 
 const { Option } = Select;
 const { TextArea } = Input;
+const { Title } = Typography;
 
 const crimeData = [
   { label: "Burglary", value: "Burglary" },
@@ -85,9 +94,10 @@ export default function Posts() {
 
   const onSubmit = () => {
     if (title && description) {
+      let data;
       if (title === "Car Theft") {
         if (option1 && option2 && option3 && image) {
-          const data = {
+          data = {
             title,
             description,
             image,
@@ -95,20 +105,20 @@ export default function Posts() {
             option2,
             option3,
           };
-          dispatch(createPost(data));
         } else {
           openNotification("error", "Error", "Please fill out all fields.");
         }
       } else {
-        const data = {
+        data = {
           title,
           description,
           image,
-          option1,
-          option2,
-          option3,
         };
+      }
+      if (!image.size > 31457280) {
         dispatch(createPost(data));
+      } else {
+        openNotification("error", "Error", "Selected file is too large.");
       }
     } else {
       openNotification("error", "Error", "Please fill out all fields.");
@@ -149,7 +159,11 @@ export default function Posts() {
         ]}
       >
         <Form layout="vertical">
-          <Form.Item label="Type of Report" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Type of Report"
+            style={{ marginBottom: 2 }}
+          >
             <Select style={{ borderRadius: 30 }} onChange={(e) => setTitle(e)}>
               {crimeData.map((data, index) => (
                 <Option key={index} value={data.value}>
@@ -158,7 +172,11 @@ export default function Posts() {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Report Description" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Report Description"
+            style={{ marginBottom: 2 }}
+          >
             <TextArea
               rows={4}
               onChange={(e) => setDescription(e.target.value)}
@@ -166,18 +184,31 @@ export default function Posts() {
           </Form.Item>
           {title === "Car Theft" ? (
             <div style={{ marginBottom: 2 }}>
-              <Form.Item label="Car colour" style={{ marginBottom: 2 }}>
+              <Form.Item
+                required
+                label="Car colour"
+                style={{ marginBottom: 2 }}
+              >
                 <Input onChange={(e) => setOption1(e.target.value)} />
               </Form.Item>
-              <Form.Item label="License Plate" style={{ marginBottom: 2 }}>
+              <Form.Item
+                required
+                label="License Plate"
+                style={{ marginBottom: 2 }}
+              >
                 <Input onChange={(e) => setOption2(e.target.value)} />
               </Form.Item>
-              <Form.Item label="Last seen location" style={{ marginBottom: 2 }}>
+              <Form.Item
+                required
+                label="Last seen location"
+                style={{ marginBottom: 2 }}
+              >
                 <Input onChange={(e) => setOption3(e.target.value)} />
               </Form.Item>
             </div>
           ) : null}
           <Form.Item
+            required={title === "Car Theft"}
             label={
               title === "Car Theft"
                 ? "Upload an image or video"
@@ -198,49 +229,51 @@ export default function Posts() {
         icon={<PlusOutlined style={{ fontSize: 28 }} />}
       />
       <Stack>
-        {data.posts
-          ? data.posts.results.map((post, index) =>
-              auth.is_auth ? (
-                <PostCard
-                  key={index}
-                  id={post.id}
-                  author={post.author}
-                  postDate={post.created_at}
-                  title={post.title}
-                  postImage={post.post_image}
-                  postVideo={post.post_video}
-                  postDescription={post.description}
-                  option1={post.option1}
-                  option2={post.option2}
-                  option3={post.option3}
-                  option4={post.option4}
-                  comments={post.comments.slice(0, 5)}
-                  visible={post.visible}
-                  viewPost
-                  userKey={post.user_key}
-                />
-              ) : post.visible ? (
-                <PostCard
-                  key={index}
-                  id={post.id}
-                  author={post.author}
-                  postDate={post.created_at}
-                  title={post.title}
-                  postImage={post.post_image}
-                  postVideo={post.post_video}
-                  postDescription={post.description}
-                  option1={post.option1}
-                  option2={post.option2}
-                  option3={post.option3}
-                  option4={post.option4}
-                  comments={post.comments.slice(0, 5)}
-                  visible={post.visible}
-                  viewPost
-                  userKey={post.user_key}
-                />
-              ) : null
-            )
-          : null}
+        {data.posts ? (
+          data.posts.results.map((post, index) =>
+            auth.is_auth ? (
+              <PostCard
+                key={index}
+                id={post.id}
+                author={post.author}
+                postDate={post.created_at}
+                title={post.title}
+                postImage={post.post_image}
+                postVideo={post.post_video}
+                postDescription={post.description}
+                option1={post.option1}
+                option2={post.option2}
+                option3={post.option3}
+                option4={post.option4}
+                comments={post.comments.slice(0, 5)}
+                visible={post.visible}
+                viewPost
+                userKey={post.user_key}
+              />
+            ) : post.visible ? (
+              <PostCard
+                key={index}
+                id={post.id}
+                author={post.author}
+                postDate={post.created_at}
+                title={post.title}
+                postImage={post.post_image}
+                postVideo={post.post_video}
+                postDescription={post.description}
+                option1={post.option1}
+                option2={post.option2}
+                option3={post.option3}
+                option4={post.option4}
+                comments={post.comments.slice(0, 5)}
+                visible={post.visible}
+                viewPost
+                userKey={post.user_key}
+              />
+            ) : null
+          )
+        ) : (
+          <Title level={3}>Nothing has been posted just yet.</Title>
+        )}
       </Stack>
       <Pagination
         hideOnSinglePage

@@ -9,6 +9,9 @@ import {
 import Loading from "../Loading";
 import { setActiveKey } from "../../store/navSlice";
 import WantedPostCard from "../WantedPostCard";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 export default function WantedPost({ match }) {
   const data = useSelector((state) => state.wanted);
@@ -17,7 +20,7 @@ export default function WantedPost({ match }) {
 
   useEffect(() => {
     dispatch(getWantedPost(match.params.id));
-    dispatch(setActiveKey("3"));
+    dispatch(setActiveKey("5"));
     // eslint-disable-next-line
   }, []);
 
@@ -67,8 +70,14 @@ export default function WantedPost({ match }) {
           onSubmit={onSubmit}
           loading={data.cLoading}
           visible={data.wantedPost.visible}
+          canSetVisibility
         />
-      ) : null}
+      ) : (
+        <Title style={{ color: "#fff", marginTop: 255 }} level={2}>
+          The wanted post you are looking for does not exist or has been
+          removed.
+        </Title>
+      )}
     </Container>
   );
 }

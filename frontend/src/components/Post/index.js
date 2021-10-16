@@ -93,6 +93,7 @@ export default function Post({ match }) {
             onSubmit={onSubmit}
             setComment={setComment}
             userKey={data.post.user_key}
+            canSetVisibility
           />
         ) : data.post.visible ? (
           <PostCard

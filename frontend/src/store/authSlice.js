@@ -130,12 +130,14 @@ export const authSlice = createSlice({
     security_token: sessionStorage.getItem("security_token"),
     message: null,
     success: false,
+    lLoading: false,
   },
   reducers: {
     clearState: (state) => {
       state.success = false;
       state.message = null;
       state.loading = false;
+      state.lLoading = false;
     },
   },
   extraReducers: {
@@ -202,10 +204,10 @@ export const authSlice = createSlice({
       }
     },
     [logout.pending]: (state) => {
-      state.loading = true;
+      state.lLoading = true;
     },
     [logout.fulfilled]: (state) => {
-      state.loading = false;
+      state.lLoading = false;
       state.username = null;
       state.is_auth = false;
       state.is_admin = false;
@@ -218,7 +220,7 @@ export const authSlice = createSlice({
       sessionStorage.removeItem("security_token");
     },
     [logout.rejected]: (state) => {
-      state.loading = false;
+      state.lLoading = false;
     },
     [changePassword.pending]: (state) => {
       state.loading = true;

@@ -20,5 +20,5 @@ class Wanted(models.Model):
 
     def wanted_image(self):
         if self.image:
-            return 'http://javaughnpryce.live:8000' + self.image.url
+            return 'http://javaughnpryce.live:8001' + self.image.url
         ''

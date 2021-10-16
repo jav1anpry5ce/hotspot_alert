@@ -38,12 +38,12 @@ class Post(models.Model):
 
     def post_image(self):
         if self.image:
-            return 'http://javaughnpryce.live:8000' + self.image.url
+            return 'http://javaughnpryce.live:8001' + self.image.url
         return ''
         
     def post_video(self):
         if self.video:
-            return 'http://javaughnpryce.live:8000' + self.video.url
+            return 'http://javaughnpryce.live:8001' + self.video.url
         return ''
 
 

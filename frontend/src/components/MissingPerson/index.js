@@ -98,7 +98,8 @@ export default function MissingPerson() {
         option5,
         option6,
       };
-      dispatch(createPost(data));
+      if (!image.size > 31457280) dispatch(createPost(data));
+      else openNotification("error", "Error", "Selected fill is too large.");
     } else {
       openNotification("error", "Error", "Please fill all required fields.");
     }

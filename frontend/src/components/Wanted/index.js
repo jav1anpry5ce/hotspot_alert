@@ -13,6 +13,9 @@ import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
 import WantedPostCard from "../WantedPostCard";
 import { openNotification } from "../../functions/Notification";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 export default function Wanted() {
   const auth = useSelector((state) => state.auth);
@@ -71,7 +74,15 @@ export default function Wanted() {
         reward,
         image,
       };
-      dispatch(createWantedPerson(data));
+      if (image) {
+        if (!image.size > 31457280) {
+          dispatch(createWantedPerson(data));
+        } else {
+          openNotification("error", "Error", "Selected fill is too large.");
+        }
+      } else {
+        dispatch(createWantedPerson(data));
+      }
     } else {
       openNotification("error", "Error", "Please fill all required fields.");
     }
@@ -198,7 +209,11 @@ export default function Wanted() {
             total={data.wantedList ? data.wantedList.count : 0}
           />
         </Stack>
-      ) : null}
+      ) : (
+        <Title style={{ color: "#fff", marginTop: 255 }} level={3}>
+          Nothing has been posted.
+        </Title>
+      )}
     </Container>
   );
 }

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changePassword, clearState } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
+import { openNotification } from "../../functions/Notification";
 
 const { Title } = Typography;
 
@@ -17,13 +18,21 @@ export default function ChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
+    dispatch(setActiveKey("7"));
     if (!auth.is_auth) {
       history.push("/account/signin");
     }
-    dispatch(setActiveKey("7"));
+    if (auth.success) {
+      history.push("/");
+      openNotification(
+        "success",
+        "Success",
+        "Password was successfully changed!"
+      );
+    }
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, [auth.is_auth, auth.success]);
 
   const onSubmit = () => {
     const data = {

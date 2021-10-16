@@ -84,6 +84,9 @@ export const createPost = createAsyncThunk(
         formData.append("user_key", localStorage.getItem("user_key"));
         formData.append("title", data.title);
         formData.append("description", data.description);
+        formData.append("option1", data.option1);
+        formData.append("option2", data.option2);
+        formData.append("option3", data.option3);
         if (data.image.type.includes("image")) {
           formData.append("image", data.image);
         } else if (data.image.type.includes("video")) {
@@ -95,6 +98,9 @@ export const createPost = createAsyncThunk(
         formData.append("user_key", localStorage.getItem("user_key"));
         formData.append("title", data.title);
         formData.append("description", data.description);
+        formData.append("option1", data.option1);
+        formData.append("option2", data.option2);
+        formData.append("option3", data.option3);
       }
       try {
         await axios.post("/api/create-post/", formData, config);

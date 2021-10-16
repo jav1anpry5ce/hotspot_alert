@@ -42,6 +42,7 @@ export default function PostCard({
   viewPost,
   visible,
   userKey,
+  canSetVisibility,
 }) {
   const auth = useSelector((state) => state.auth);
   const history = useHistory();
@@ -111,12 +112,16 @@ export default function PostCard({
                   verified
                 </span>
               </div>
-              {auth.is_auth ? (
+              {auth.is_auth && canSetVisibility ? (
                 <Dropdown overlay={menu}>
                   <AiOutlineMore
                     style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
                   />
                 </Dropdown>
+              ) : auth.is_auth ? (
+                <Text style={{ fontSize: 11 }}>
+                  Visible: {String(visible).toLocaleUpperCase()}
+                </Text>
               ) : null}
             </div>
           ) : (
@@ -129,12 +134,16 @@ export default function PostCard({
               <Text style={{ display: "flex", marginBottom: -1 }}>
                 anonymous_user_{userKey}
               </Text>
-              {auth.is_auth ? (
+              {auth.is_auth && canSetVisibility ? (
                 <Dropdown overlay={menu}>
                   <AiOutlineMore
                     style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
                   />
                 </Dropdown>
+              ) : auth.is_auth ? (
+                <Text style={{ fontSize: 11 }}>
+                  Visible: {String(visible).toLocaleUpperCase()}
+                </Text>
               ) : null}
             </div>
           )
@@ -154,7 +163,7 @@ export default function PostCard({
             </div>
           ) : postVideo ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <ReactPlayer width={265} controls url={postVideo} />
+              <ReactPlayer width={275} controls url={postVideo} />
             </div>
           ) : null}
           <Text strong>{postDescription}</Text>

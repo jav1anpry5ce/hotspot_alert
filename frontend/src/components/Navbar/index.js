@@ -14,6 +14,15 @@ import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navSlice";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+
+const Loading = (
+  <LoadingOutlined
+    style={{ fontSize: 16, marginRight: 3, marginTop: 3 }}
+    spin
+  />
+);
 
 export default function Navbar() {
   const auth = useSelector((state) => state.auth);
@@ -146,13 +155,17 @@ export default function Navbar() {
                     style={{ display: "flex", justifyContent: "center" }}
                     onClick={() => dispatch(logout())}
                     icon={
-                      <GoSignOut
-                        style={{
-                          marginRight: 3,
-                          fontSize: 16,
-                          marginTop: 5,
-                        }}
-                      />
+                      auth.lLoading ? (
+                        <Spin indicator={Loading} />
+                      ) : (
+                        <GoSignOut
+                          style={{
+                            marginRight: 3,
+                            fontSize: 16,
+                            marginTop: 5,
+                          }}
+                        />
+                      )
                     }
                   >
                     Sign out
@@ -330,13 +343,17 @@ export default function Navbar() {
                         <Item
                           onClick={() => dispatch(logout())}
                           icon={
-                            <GoSignOut
-                              style={{
-                                marginRight: 3,
-                                fontSize: 16,
-                                marginBottom: -5,
-                              }}
-                            />
+                            auth.lLoading ? (
+                              <Spin indicator={Loading} />
+                            ) : (
+                              <GoSignOut
+                                style={{
+                                  marginRight: 3,
+                                  fontSize: 16,
+                                  marginBottom: -5,
+                                }}
+                              />
+                            )
                           }
                         >
                           Sign out
