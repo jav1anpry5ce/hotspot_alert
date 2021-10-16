@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Form, Input, Pagination } from "antd";
+import { Button, Modal, Form, Input, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,7 +9,6 @@ import {
   clearState,
 } from "../../store/wantedSlice";
 import Loading from "../Loading";
-import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
 import WantedPostCard from "../WantedPostCard";
 import { openNotification } from "../../functions/Notification";
@@ -21,16 +20,15 @@ export default function Wanted() {
   const auth = useSelector((state) => state.auth);
   const data = useSelector((state) => state.wanted);
   const dispatch = useDispatch();
-  const history = useHistory();
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   const [crime, setCrime] = useState("");
   const [reward, setReward] = useState("");
   const [image, setImage] = useState(null);
   const [page, setPage] = useState(1);
+  const observer = useRef();
 
   useEffect(() => {
-    dispatch(getWantedList(page));
     dispatch(setActiveKey("5"));
     return () => dispatch(clearState());
     // eslint-disable-next-line
@@ -45,22 +43,18 @@ export default function Wanted() {
     if (data.success) {
       document.getElementById("wanted-form").reset();
       dispatch(clearState());
-      dispatch(getWantedList(page));
+      setPage(1);
       showModal();
       setName("");
       setCrime("");
       setReward("");
       setImage(null);
     }
-    if (data.vSuccess) {
-      dispatch(clearState());
-      dispatch(getWantedList(page));
-    }
     if (data.message) {
       openNotification("error", "Error", data.message);
     }
     // eslint-disable-next-line
-  }, [data.success, data.vSuccess, data.message]);
+  }, [data.success, data.message]);
 
   const showModal = () => {
     setShow(!show);
@@ -88,14 +82,20 @@ export default function Wanted() {
     }
   };
 
-  const handelPageChange = (page) => {
-    setPage(page);
-    history.push(`?page=${page}`);
-  };
-
-  if (data.loading) {
-    return <Loading />;
-  }
+  const lastPostElement = useCallback(
+    (node) => {
+      if (data.loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && data.wantedList.next) {
+          setPage((page) => page + 1);
+          //console.log("HI");
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [data.loading, data.wantedList]
+  );
 
   return (
     <Container maxWidth="sm">
@@ -167,53 +167,81 @@ export default function Wanted() {
           icon={<PlusOutlined style={{ fontSize: 28 }} />}
         />
       ) : null}
-      {data.wantedList ? (
-        <Stack spacing={1}>
-          {data.wantedList.results.map((person, index) =>
-            auth.is_auth ? (
-              <WantedPostCard
-                key={index}
-                id={person.id}
-                name={person.name}
-                image={person.wanted_image}
-                crime={person.crime}
-                reward={person.reward}
-                comments={person.comments}
-                visible={person.visible}
-                viewPost
-              />
-            ) : person.visible ? (
-              <WantedPostCard
-                key={index}
-                id={person.id}
-                name={person.name}
-                image={person.wanted_image}
-                crime={person.crime}
-                reward={person.reward}
-                comments={person.comments.slice(0, 5)}
-                visible={person.visible}
-                viewPost
-              />
-            ) : null
-          )}
-          <Pagination
-            hideOnSinglePage
-            showSizeChanger={false}
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: 25,
-            }}
-            onChange={handelPageChange}
-            current={page}
-            total={data.wantedList ? data.wantedList.count : 0}
+      <Stack spacing={1}>
+        {data.results ? (
+          data.results.map((person, index) => {
+            if (data.results.length === index + 1) {
+              return auth.is_auth ? (
+                <div ref={lastPostElement} key={index}>
+                  <WantedPostCard
+                    id={person.id}
+                    name={person.name}
+                    image={person.wanted_image}
+                    crime={person.crime}
+                    reward={person.reward}
+                    comments={person.comments}
+                    visible={person.visible}
+                    viewPost
+                  />
+                </div>
+              ) : person.visible ? (
+                <div ref={lastPostElement} key={index}>
+                  <WantedPostCard
+                    id={person.id}
+                    name={person.name}
+                    image={person.wanted_image}
+                    crime={person.crime}
+                    reward={person.reward}
+                    comments={person.comments.slice(0, 5)}
+                    visible={person.visible}
+                    viewPost
+                  />
+                </div>
+              ) : null;
+            } else {
+              return auth.is_auth ? (
+                <WantedPostCard
+                  key={index}
+                  id={person.id}
+                  name={person.name}
+                  image={person.wanted_image}
+                  crime={person.crime}
+                  reward={person.reward}
+                  comments={person.comments}
+                  visible={person.visible}
+                  viewPost
+                />
+              ) : person.visible ? (
+                <WantedPostCard
+                  key={index}
+                  id={person.id}
+                  name={person.name}
+                  image={person.wanted_image}
+                  crime={person.crime}
+                  reward={person.reward}
+                  comments={person.comments.slice(0, 5)}
+                  visible={person.visible}
+                  viewPost
+                />
+              ) : null;
+            }
+          })
+        ) : (
+          <Title style={{ color: "#fff", marginTop: 255 }} level={3}>
+            Nothing has been posted.
+          </Title>
+        )}
+      </Stack>
+      {data.loading ? (
+        data.results.length > 0 ? (
+          <Spin
+            size="medium"
+            style={{ display: "flex", justifyContent: "center" }}
           />
-        </Stack>
-      ) : (
-        <Title style={{ color: "#fff", marginTop: 255 }} level={3}>
-          Nothing has been posted.
-        </Title>
-      )}
+        ) : (
+          <Loading />
+        )
+      ) : null}
     </Container>
   );
 }

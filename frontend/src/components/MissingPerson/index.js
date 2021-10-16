@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Pagination } from "antd";
+import { Button, Modal, Select, Form, Input, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import {
   getMissingPersons,
   createPost,
   clearState,
-  resetSuccess,
 } from "../../store/postSlice";
 import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
@@ -26,7 +24,6 @@ const genderData = [
 export default function MissingPerson() {
   const auth = useSelector((state) => state.auth);
   const data = useSelector((state) => state.post);
-  const history = useHistory();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState("");
@@ -38,10 +35,10 @@ export default function MissingPerson() {
   const [option5, setOption5] = useState("");
   const [option6, setOption6] = useState("");
   const [page, setPage] = useState(1);
+  const observer = useRef();
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
-    dispatch(getMissingPersons(page));
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
@@ -54,7 +51,7 @@ export default function MissingPerson() {
   useEffect(() => {
     if (data.success) {
       dispatch(clearState());
-      dispatch(getMissingPersons("1"));
+      setPage(1);
       showModal();
       openNotification("success", "Success", "Missing person post created!");
       setDescription("");
@@ -66,15 +63,11 @@ export default function MissingPerson() {
       setOption6("");
       setImage(null);
     }
-    if (data.vSuccess) {
-      dispatch(resetSuccess());
-      dispatch(getMissingPersons(page));
-    }
     if (data.message) {
       openNotification("error", "Error", data.message);
     }
     // eslint-disable-next-line
-  }, [data.success, data.message, data.vSuccess]);
+  }, [data.success, data.message]);
 
   const onSubmit = () => {
     if (
@@ -105,18 +98,24 @@ export default function MissingPerson() {
     }
   };
 
+  const lastPostElement = useCallback(
+    (node) => {
+      if (data.loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && data.missingPersons.next) {
+          setPage((page) => page + 1);
+          //console.log("HI");
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [data.loading, data.missingPersons]
+  );
+
   const showModal = () => {
     setShow(!show);
   };
-
-  const handelPageChange = (page) => {
-    setPage(page);
-    history.push(`?page=${page}`);
-  };
-
-  if (data.loading) {
-    return <Loading />;
-  }
 
   return (
     <Container maxWidth="sm">
@@ -222,40 +221,64 @@ export default function MissingPerson() {
         />
       ) : null}
       <Stack>
-        {data.missingPersons
-          ? data.missingPersons.results.map((person, index) => (
-              <PostCard
-                key={index}
-                id={person.id}
-                author={person.author}
-                postDate={person.created_at}
-                title={person.title}
-                postImage={person.post_image}
-                postDescription={person.description}
-                option1={person.option1}
-                option2={person.option2}
-                option3={person.option3}
-                option4={person.option4}
-                option5={person.option5}
-                option6={person.option6}
-                visible={person.visible}
-                viewPost
-              />
-            ))
+        {data.missingPersonsResults
+          ? data.missingPersonsResults.map((person, index) => {
+              if (data.missingPersonsResults.length === index + 1) {
+                return (
+                  <div ref={lastPostElement}>
+                    <PostCard
+                      key={index}
+                      id={person.id}
+                      author={person.author}
+                      postDate={person.created_at}
+                      title={person.title}
+                      postImage={person.post_image}
+                      postDescription={person.description}
+                      option1={person.option1}
+                      option2={person.option2}
+                      option3={person.option3}
+                      option4={person.option4}
+                      option5={person.option5}
+                      option6={person.option6}
+                      visible={person.visible}
+                      viewPost
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <PostCard
+                    key={index}
+                    id={person.id}
+                    author={person.author}
+                    postDate={person.created_at}
+                    title={person.title}
+                    postImage={person.post_image}
+                    postDescription={person.description}
+                    option1={person.option1}
+                    option2={person.option2}
+                    option3={person.option3}
+                    option4={person.option4}
+                    option5={person.option5}
+                    option6={person.option6}
+                    visible={person.visible}
+                    viewPost
+                  />
+                );
+              }
+            })
           : null}
       </Stack>
-      <Pagination
-        hideOnSinglePage
-        showSizeChanger={false}
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 25,
-        }}
-        current={page}
-        total={data.missingPersons ? data.missingPersons.count : 0}
-        onChange={handelPageChange}
-      />
+      {data.loading ? (
+        data.missingPersonsResults.length > 0 ? (
+          <Spin
+            size="medium"
+            style={{ display: "flex", justifyContent: "center" }}
+          />
+        ) : (
+          <Loading />
+        )
+      ) : null}
     </Container>
   );
 }

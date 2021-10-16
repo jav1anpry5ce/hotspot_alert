@@ -197,8 +197,10 @@ export const postSlice = createSlice({
     success: false,
     vSuccess: false,
     posts: null,
+    postsResults: [],
     post: null,
     missingPersons: null,
+    missingPersonsResults: [],
     message: null,
   },
   reducers: {
@@ -210,8 +212,10 @@ export const postSlice = createSlice({
       state.vSuccess = false;
       state.posts = null;
       state.missingPersons = null;
+      state.missingPersonsResults = [];
       state.post = null;
       state.message = null;
+      state.postsResults = [];
     },
     resetSuccess: (state) => {
       state.success = false;
@@ -225,6 +229,7 @@ export const postSlice = createSlice({
     [getPosts.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.posts = payload.data;
+      state.postsResults = state.postsResults.concat(payload.data.results);
     },
     [getPosts.rejected]: (state) => {
       state.loading = false;
@@ -264,6 +269,9 @@ export const postSlice = createSlice({
     [getMissingPersons.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.missingPersons = payload.data;
+      state.missingPersonsResults = state.missingPersonsResults.concat(
+        payload.data.results
+      );
     },
     [getMissingPersons.rejected]: (state) => {
       state.loading = false;

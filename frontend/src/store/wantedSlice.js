@@ -136,6 +136,7 @@ export const wantedSlice = createSlice({
     loading: false,
     wantedList: null,
     wantedPost: null,
+    results: [],
     wLoading: false,
     cLoading: false,
     vLoading: false,
@@ -154,6 +155,7 @@ export const wantedSlice = createSlice({
       state.success = false;
       state.vSuccess = false;
       state.message = null;
+      state.results = [];
     },
     resetSuccess: (state) => {
       state.success = false;
@@ -167,6 +169,7 @@ export const wantedSlice = createSlice({
     [getWantedList.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.wantedList = payload.data;
+      state.results = state.results.concat(payload.data.results);
     },
     [getWantedList.rejected]: (state) => {
       state.loading = false;

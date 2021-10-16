@@ -1,23 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import {
-  Button,
-  Modal,
-  Select,
-  Form,
-  Input,
-  Pagination,
-  Typography,
-} from "antd";
+import { Button, Modal, Select, Form, Input, Typography, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import {
-  getPosts,
-  createPost,
-  clearState,
-  resetSuccess,
-} from "../../store/postSlice";
+import { getPosts, createPost, clearState } from "../../store/postSlice";
 import { openNotification } from "../../functions/Notification";
 import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
@@ -42,7 +28,6 @@ const crimeData = [
 export default function Posts() {
   const data = useSelector((state) => state.post);
   const auth = useSelector((state) => state.auth);
-  const history = useHistory();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -52,9 +37,9 @@ export default function Posts() {
   const [option2, setOption2] = useState("");
   const [option3, setOption3] = useState("");
   const [page, setPage] = useState(1);
+  const observer = useRef();
 
   useEffect(() => {
-    dispatch(getPosts(page));
     dispatch(setActiveKey("3"));
     return () => dispatch(clearState());
     // eslint-disable-next-line
@@ -67,8 +52,8 @@ export default function Posts() {
 
   useEffect(() => {
     if (data.success) {
+      setPage(1);
       dispatch(clearState());
-      dispatch(getPosts(1));
       showModal();
       setTitle("");
       setDescription("");
@@ -81,16 +66,27 @@ export default function Posts() {
     if (data.message) {
       openNotification("error", "Error", data.message);
     }
-    if (data.vSuccess) {
-      dispatch(resetSuccess());
-      dispatch(getPosts(1));
-    }
     // eslint-disable-next-line
-  }, [data.success, data.message, data.vSuccess]);
+  }, [data.success, data.message]);
 
   const showModal = () => {
     setShow(!show);
   };
+
+  const lastPostElement = useCallback(
+    (node) => {
+      if (data.loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && data.posts.next) {
+          setPage((page) => page + 1);
+          //console.log("HI");
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [data.loading, data.posts]
+  );
 
   const onSubmit = () => {
     if (title && description) {
@@ -129,14 +125,9 @@ export default function Posts() {
     }
   };
 
-  const handelPageChange = (page) => {
-    setPage(page);
-    history.push(`?page=${page}`);
-  };
-
-  if (data.loading) {
-    return <Loading />;
-  }
+  // if (data.loading) {
+  //   return <Loading />;
+  // }
   return (
     <Container maxWidth="sm">
       <Modal
@@ -233,64 +224,108 @@ export default function Posts() {
         icon={<PlusOutlined style={{ fontSize: 28 }} />}
       />
       <Stack>
-        {data.posts ? (
-          data.posts.results.map((post, index) =>
-            auth.is_auth ? (
-              <PostCard
-                key={index}
-                id={post.id}
-                author={post.author}
-                postDate={post.created_at}
-                title={post.title}
-                postImage={post.post_image}
-                postVideo={post.post_video}
-                postDescription={post.description}
-                option1={post.option1}
-                option2={post.option2}
-                option3={post.option3}
-                option4={post.option4}
-                comments={post.comments.slice(0, 5)}
-                visible={post.visible}
-                viewPost
-                userKey={post.user_key}
-              />
-            ) : post.visible ? (
-              <PostCard
-                key={index}
-                id={post.id}
-                author={post.author}
-                postDate={post.created_at}
-                title={post.title}
-                postImage={post.post_image}
-                postVideo={post.post_video}
-                postDescription={post.description}
-                option1={post.option1}
-                option2={post.option2}
-                option3={post.option3}
-                option4={post.option4}
-                comments={post.comments.slice(0, 5)}
-                visible={post.visible}
-                viewPost
-                userKey={post.user_key}
-              />
-            ) : null
-          )
+        {data.postsResults ? (
+          data.postsResults.map((post, index) => {
+            if (data.postsResults.length === index + 1) {
+              return auth.is_auth ? (
+                <div ref={lastPostElement} key={index}>
+                  <PostCard
+                    key={index}
+                    id={post.id}
+                    author={post.author}
+                    postDate={post.created_at}
+                    title={post.title}
+                    postImage={post.post_image}
+                    postVideo={post.post_video}
+                    postDescription={post.description}
+                    option1={post.option1}
+                    option2={post.option2}
+                    option3={post.option3}
+                    option4={post.option4}
+                    comments={post.comments.slice(0, 5)}
+                    visible={post.visible}
+                    viewPost
+                    userKey={post.user_key}
+                  />
+                </div>
+              ) : post.visible ? (
+                <div ref={lastPostElement} key={index}>
+                  <PostCard
+                    key={index}
+                    id={post.id}
+                    author={post.author}
+                    postDate={post.created_at}
+                    title={post.title}
+                    postImage={post.post_image}
+                    postVideo={post.post_video}
+                    postDescription={post.description}
+                    option1={post.option1}
+                    option2={post.option2}
+                    option3={post.option3}
+                    option4={post.option4}
+                    comments={post.comments.slice(0, 5)}
+                    visible={post.visible}
+                    viewPost
+                    userKey={post.user_key}
+                  />
+                </div>
+              ) : null;
+            } else {
+              return auth.is_auth ? (
+                <PostCard
+                  key={index}
+                  id={post.id}
+                  author={post.author}
+                  postDate={post.created_at}
+                  title={post.title}
+                  postImage={post.post_image}
+                  postVideo={post.post_video}
+                  postDescription={post.description}
+                  option1={post.option1}
+                  option2={post.option2}
+                  option3={post.option3}
+                  option4={post.option4}
+                  comments={post.comments.slice(0, 5)}
+                  visible={post.visible}
+                  viewPost
+                  userKey={post.user_key}
+                />
+              ) : post.visible ? (
+                <PostCard
+                  key={index}
+                  id={post.id}
+                  author={post.author}
+                  postDate={post.created_at}
+                  title={post.title}
+                  postImage={post.post_image}
+                  postVideo={post.post_video}
+                  postDescription={post.description}
+                  option1={post.option1}
+                  option2={post.option2}
+                  option3={post.option3}
+                  option4={post.option4}
+                  comments={post.comments.slice(0, 5)}
+                  visible={post.visible}
+                  viewPost
+                  userKey={post.user_key}
+                />
+              ) : null;
+            }
+          })
         ) : (
           <Title level={3}>Nothing has been posted just yet.</Title>
         )}
       </Stack>
-      <Pagination
-        hideOnSinglePage
-        showSizeChanger={false}
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 25,
-        }}
-        current={page}
-        total={data.posts ? data.posts.count : 0}
-        onChange={handelPageChange}
-      />
+      {data.loading ? (
+        data.postsResults.length > 0 ? (
+          <Spin
+            size="medium"
+            style={{ display: "flex", justifyContent: "center" }}
+          />
+        ) : (
+          <Loading />
+        )
+      ) : null}
     </Container>
   );
 }
