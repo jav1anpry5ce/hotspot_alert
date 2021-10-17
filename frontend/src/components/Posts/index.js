@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Typography, Spin } from "antd";
+import {
+  Button,
+  Modal,
+  Select,
+  Form,
+  Input,
+  Typography,
+  Spin,
+  BackTop,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts, createPost, clearState } from "../../store/postSlice";
@@ -236,6 +245,12 @@ export default function Posts() {
           </Form.Item>
         </Form>
       </Modal>
+      <BackTop
+        style={{
+          bottom: 140,
+          right: 25,
+        }}
+      />
       <ChatButton bottom={85} />
       <CustomButton
         style={{ position: "fixed", bottom: 30, right: 25 }}

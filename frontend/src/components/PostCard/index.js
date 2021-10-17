@@ -82,7 +82,6 @@ export default function PostCard({
     >
       {backVisible ? (
         <PageHeader
-          className="site-page-header"
           onBack={() => window.history.back()}
           title="Back"
           style={{ marginTop: -35, marginLeft: -25 }}

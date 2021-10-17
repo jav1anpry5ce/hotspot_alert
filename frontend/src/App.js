@@ -20,7 +20,6 @@ import {
   Chats,
   Chat,
 } from "./components";
-import { BackTop } from "antd";
 
 import image from "./images/justice.jpeg";
 
@@ -50,7 +49,6 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Content style={{ overflow: "auto", marginTop: 55 }}>
-            <BackTop style={{ bottom: 140, right: 25 }} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/post/:post_id" component={Post} />
             <Route exact path="/account/signin" component={SignIn} />

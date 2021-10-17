@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Spin } from "antd";
+import { Button, Modal, Select, Form, Input, Spin, BackTop } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -248,6 +248,12 @@ export default function MissingPerson() {
           </Form.Item>
         </Form>
       </Modal>
+      <BackTop
+        style={{
+          bottom: auth.is_auth ? 140 : 85,
+          right: 25,
+        }}
+      />
       {auth.is_auth ? (
         <div>
           <CustomButton
@@ -257,7 +263,7 @@ export default function MissingPerson() {
             size="large"
             icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
           />
-          <ChatButton bottom={90} />
+          <ChatButton bottom={85} />
         </div>
       ) : (
         <ChatButton bottom={30} />
@@ -267,9 +273,8 @@ export default function MissingPerson() {
           ? data.missingPersonsResults.map((person, index) => {
               if (data.missingPersonsResults.length === index + 1) {
                 return (
-                  <div ref={lastPostElement}>
+                  <div ref={lastPostElement} key={index}>
                     <PostCard
-                      key={index}
                       id={person.id}
                       author={person.author}
                       postDate={person.created_at}
