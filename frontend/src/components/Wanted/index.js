@@ -96,7 +96,6 @@ export default function Wanted() {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && data.wantedList.next) {
           setPage((page) => page + 1);
-          //console.log("HI");
         }
       });
       if (node) observer.current.observe(node);
