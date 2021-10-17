@@ -108,16 +108,16 @@ export default function PostCard({
                 justifyContent: "space-between",
               }}
             >
-              <div>
+              <div style={{ display: "flex" }}>
                 <Text>{author.account.name}</Text>
                 <span
                   style={{
                     fontSize: 16,
                     color: "#47a6ff",
                     marginLeft: 2,
-                    marginTop: 6,
+                    marginTop: 4,
                   }}
-                  class="material-icons"
+                  className="material-icons"
                 >
                   verified
                 </span>
@@ -228,7 +228,7 @@ export default function PostCard({
                               marginLeft: 1,
                               marginTop: 4.5,
                             }}
-                            class="material-icons"
+                            className="material-icons"
                           >
                             verified
                           </span>

@@ -69,7 +69,6 @@ export default function WantedPostCard({
         <div>
           {backVisible ? (
             <PageHeader
-              className="site-page-header"
               onBack={() => window.history.back()}
               title="Back"
               style={{
@@ -137,7 +136,7 @@ export default function WantedPostCard({
                             marginLeft: 1,
                             marginTop: 4.5,
                           }}
-                          class="material-icons"
+                          className="material-icons"
                         >
                           verified
                         </span>
