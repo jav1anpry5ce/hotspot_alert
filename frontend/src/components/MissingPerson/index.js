@@ -36,6 +36,7 @@ export default function MissingPerson() {
   const [option5, setOption5] = useState("");
   const [option6, setOption6] = useState("");
   const [page, setPage] = useState(1);
+  const [form] = Form.useForm();
   const observer = useRef();
 
   useEffect(() => {
@@ -51,9 +52,18 @@ export default function MissingPerson() {
 
   useEffect(() => {
     if (data.success) {
+      form.setFieldsValue({
+        description: "",
+        gender: "",
+        last: "",
+        age: "",
+        location: "",
+        kin: "",
+        contact: "",
+        image: "",
+      });
       dispatch(clearState());
       setPage(1);
-      dispatch(getMissingPersons(1));
       showModal();
       openNotification("success", "Success", "Missing person post created!");
       setDescription("");
@@ -144,11 +154,17 @@ export default function MissingPerson() {
           </Button>,
         ]}
       >
-        <Form layout="vertical" id="missing-form" onFinish={onSubmit}>
+        <Form
+          layout="vertical"
+          id="missing-form"
+          onFinish={onSubmit}
+          form={form}
+        >
           <Form.Item
             required
             label="Report Description"
             style={{ marginBottom: 2 }}
+            name="description"
           >
             <TextArea
               rows={4}
@@ -159,10 +175,16 @@ export default function MissingPerson() {
             required
             label="Last Seen Attire"
             style={{ marginBottom: 2 }}
+            name="last"
           >
             <Input onChange={(e) => setOption1(e.target.value)} />
           </Form.Item>
-          <Form.Item required label="Gender" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Gender"
+            style={{ marginBottom: 2 }}
+            name="gender"
+          >
             <Select
               style={{ borderRadius: 30 }}
               onChange={(e) => setOption2(e)}
@@ -174,7 +196,12 @@ export default function MissingPerson() {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item required label="Age" style={{ marginBottom: 2 }}>
+          <Form.Item
+            required
+            label="Age"
+            style={{ marginBottom: 2 }}
+            name="age"
+          >
             <Input
               type="number"
               min="0"
@@ -186,6 +213,7 @@ export default function MissingPerson() {
             required
             label="Last seen location"
             style={{ marginBottom: 2 }}
+            name="location"
           >
             <Input onChange={(e) => setOption4(e.target.value)} />
           </Form.Item>
@@ -193,6 +221,7 @@ export default function MissingPerson() {
             required
             label="Next of kin name"
             style={{ marginBottom: 2 }}
+            name="kin"
           >
             <Input onChange={(e) => setOption5(e.target.value)} />
           </Form.Item>
@@ -200,6 +229,7 @@ export default function MissingPerson() {
             required
             label="Contact Information"
             style={{ marginBottom: 2 }}
+            name="contact"
           >
             <Input onChange={(e) => setOption6(e.target.value)} />
           </Form.Item>
@@ -207,6 +237,7 @@ export default function MissingPerson() {
             required
             label="Upload an image"
             style={{ marginBottom: 2 }}
+            name="image"
           >
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
           </Form.Item>

@@ -27,6 +27,7 @@ export default function Wanted() {
   const [reward, setReward] = useState("");
   const [image, setImage] = useState(null);
   const [page, setPage] = useState(1);
+  const [form] = Form.useForm();
   const observer = useRef();
 
   useEffect(() => {
@@ -42,10 +43,14 @@ export default function Wanted() {
 
   useEffect(() => {
     if (data.success) {
-      document.getElementById("wanted-form").reset();
+      form.setFieldsValue({
+        name: "",
+        crime: "",
+        reward: "",
+        image: "",
+      });
       dispatch(clearState());
       setPage(1);
-      dispatch(getWantedList(1));
       showModal();
       setName("");
       setCrime("");
@@ -124,12 +129,13 @@ export default function Wanted() {
           </Button>,
         ]}
       >
-        <Form layout="vertical" id="wanted-form">
+        <Form layout="vertical" id="wanted-form" form={form}>
           <Form.Item
             required
             allowClear
             label="Name"
             style={{ marginBottom: 2 }}
+            name="name"
           >
             <Input onChange={(e) => setName(e.target.value)} />
           </Form.Item>
@@ -138,6 +144,7 @@ export default function Wanted() {
             allowClear
             label="Crime"
             style={{ marginBottom: 2 }}
+            name="crime"
           >
             <Input onChange={(e) => setCrime(e.target.value)} />
           </Form.Item>
@@ -146,6 +153,7 @@ export default function Wanted() {
             allowClear
             label="Reward"
             style={{ marginBottom: 2 }}
+            name="reward"
           >
             <Input
               type="number"
@@ -154,7 +162,11 @@ export default function Wanted() {
               onChange={(e) => setReward(e.target.value)}
             />
           </Form.Item>
-          <Form.Item label="Photo(optional)" style={{ marginBottom: 2 }}>
+          <Form.Item
+            label="Photo(optional)"
+            style={{ marginBottom: 2 }}
+            name="image"
+          >
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
           </Form.Item>
         </Form>
@@ -204,7 +216,9 @@ export default function Wanted() {
                     viewPost
                   />
                 </div>
-              ) : null;
+              ) : (
+                <div ref={lastPostElement}></div>
+              );
             } else {
               return auth.is_auth ? (
                 <WantedPostCard

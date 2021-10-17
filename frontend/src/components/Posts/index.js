@@ -38,6 +38,7 @@ export default function Posts() {
   const [option2, setOption2] = useState("");
   const [option3, setOption3] = useState("");
   const [page, setPage] = useState(1);
+  const [form] = Form.useForm();
   const observer = useRef();
 
   useEffect(() => {
@@ -53,10 +54,17 @@ export default function Posts() {
 
   useEffect(() => {
     if (data.success) {
+      form.setFieldsValue({
+        type: "",
+        description: "",
+        colour: "",
+        plate: "",
+        location: "",
+        image: "",
+      });
       dispatch(clearState());
-      setPage(1);
-      dispatch(getPosts(1));
       showModal();
+      setPage(1);
       setTitle("");
       setDescription("");
       setOption1("");
@@ -155,11 +163,12 @@ export default function Posts() {
           </Button>,
         ]}
       >
-        <Form layout="vertical">
+        <Form layout="vertical" form={form}>
           <Form.Item
             required
             label="Type of Report"
             style={{ marginBottom: 2 }}
+            name="type"
           >
             <Select style={{ borderRadius: 30 }} onChange={(e) => setTitle(e)}>
               {crimeData.map((data, index) => (
@@ -173,6 +182,7 @@ export default function Posts() {
             required
             label="Report Description"
             style={{ marginBottom: 2 }}
+            name="description"
           >
             <TextArea
               rows={4}
@@ -185,6 +195,7 @@ export default function Posts() {
                 required
                 label="Car colour"
                 style={{ marginBottom: 2 }}
+                name="colour"
               >
                 <Input onChange={(e) => setOption1(e.target.value)} />
               </Form.Item>
@@ -192,6 +203,7 @@ export default function Posts() {
                 required
                 label="License Plate"
                 style={{ marginBottom: 2 }}
+                name="plate"
               >
                 <Input onChange={(e) => setOption2(e.target.value)} />
               </Form.Item>
@@ -199,6 +211,7 @@ export default function Posts() {
                 required
                 label="Last seen location"
                 style={{ marginBottom: 2 }}
+                name="location"
               >
                 <Input onChange={(e) => setOption3(e.target.value)} />
               </Form.Item>
@@ -212,6 +225,7 @@ export default function Posts() {
                 : "Upload an image or video(optional)"
             }
             style={{ marginBottom: 2 }}
+            name="image"
           >
             <Input type="file" onChange={(e) => setImage(e.target.files[0])} />
           </Form.Item>
@@ -272,7 +286,9 @@ export default function Posts() {
                     userKey={post.user_key}
                   />
                 </div>
-              ) : null;
+              ) : (
+                <div ref={lastPostElement}></div>
+              );
             } else {
               return auth.is_auth ? (
                 <PostCard
