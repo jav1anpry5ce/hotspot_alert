@@ -51,7 +51,11 @@ export default function Wanted() {
         image: "",
       });
       dispatch(clearState());
-      setPage(1);
+      if (!page === 1) {
+        setPage(1);
+      } else {
+        dispatch(getWantedList(1));
+      }
       showModal();
       setName("");
       setCrime("");

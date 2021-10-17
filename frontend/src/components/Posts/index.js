@@ -65,7 +65,11 @@ export default function Posts() {
       });
       dispatch(clearState());
       showModal();
-      setPage(1);
+      if (!page === 1) {
+        setPage(1);
+      } else {
+        dispatch(getPosts(1));
+      }
       setTitle("");
       setDescription("");
       setOption1("");

@@ -64,8 +64,12 @@ export default function MissingPerson() {
         image: "",
       });
       dispatch(clearState());
-      setPage(1);
       showModal();
+      if (!page === 1) {
+        setPage(1);
+      } else {
+        dispatch(getMissingPersons(1));
+      }
       openNotification("success", "Success", "Missing person post created!");
       setDescription("");
       setOption1("");
