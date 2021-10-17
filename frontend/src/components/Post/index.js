@@ -96,6 +96,7 @@ export default function Post({ match }) {
             setComment={setComment}
             userKey={data.post.user_key}
             canSetVisibility
+            backVisible
           />
         ) : data.post.visible ? (
           <PostCard
@@ -119,6 +120,7 @@ export default function Post({ match }) {
             onSubmit={onSubmit}
             setComment={setComment}
             userKey={data.post.user_key}
+            backVisible
           />
         ) : (
           <Title level={4} style={{ color: "white", marginTop: 250 }}>

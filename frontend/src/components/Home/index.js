@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { Container } from "@mui/material";
-import { Typography, Card } from "antd";
 import { useDispatch } from "react-redux";
 import { setActiveKey } from "../../store/navSlice";
 import ChatButton from "../ChatButton";
 import image from "../../images/person.jpg";
-import { Image } from "./Elements";
 
 import { Title, Text, Paragraph } from "./Elements";
 
@@ -20,10 +18,11 @@ export default function Home() {
       maxWidth="xls"
       style={{
         color: "#fff",
-        height: "150%",
-        // backgroundColor: "rgba(80,102,141,0.8)",
+        minHeight: "94.4vh",
         backgroundImage: `url(${image})`,
-        backgroundSize: "auto",
+        backgroundSize: "cover",
+        backgroundAttachment: "fixed",
+        marginTop: 50,
       }}
     >
       <Container maxWidth="md">

@@ -13,6 +13,7 @@ import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
 import Loading from "../Loading";
 import ChatButton from "../ChatButton";
+import { CustomButton } from "../Posts/Elements";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -245,13 +246,12 @@ export default function MissingPerson() {
       </Modal>
       {auth.is_auth ? (
         <div>
-          <Button
+          <CustomButton
             onClick={showModal}
-            style={{ position: "fixed", right: 25, bottom: 30, zIndex: 1 }}
-            type="primary"
+            style={{ position: "fixed", right: 25, bottom: 30 }}
             shape="circle"
             size="large"
-            icon={<PlusOutlined style={{ fontSize: 28 }} />}
+            icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
           />
           <ChatButton bottom={90} />
         </div>

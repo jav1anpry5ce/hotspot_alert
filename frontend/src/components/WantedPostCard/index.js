@@ -9,6 +9,7 @@ import {
   Avatar,
   Menu,
   Dropdown,
+  PageHeader,
 } from "antd";
 import { TextArea } from "../PostCard/Elements";
 import { AiOutlineMore } from "react-icons/ai";
@@ -32,6 +33,7 @@ export default function WantedPostCard({
   onSubmit,
   loading,
   canSetVisibility,
+  backVisible,
 }) {
   const auth = useSelector((state) => state.auth);
   const history = useHistory();
@@ -64,26 +66,40 @@ export default function WantedPostCard({
       bordered={false}
       headStyle={{ backgroundColor: "#383d42" }}
       title={
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Title style={{ color: "white" }} align="center">
-            Wanted
-          </Title>
-          {auth.is_auth && canSetVisibility ? (
-            <Dropdown overlay={menu}>
-              <AiOutlineMore
-                style={{ fontSize: 36, marginTop: 3, color: "white" }}
-              />
-            </Dropdown>
-          ) : auth.is_auth ? (
-            <Text style={{ fontSize: 14, marginTop: 12, color: "white" }}>
-              Visible: {String(visible).toLocaleUpperCase()}
-            </Text>
+        <div>
+          {backVisible ? (
+            <PageHeader
+              className="site-page-header"
+              onBack={() => window.history.back()}
+              title="Back"
+              style={{
+                marginTop: -35,
+                marginLeft: -25,
+                color: "white",
+              }}
+            />
           ) : null}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Title style={{ color: "white" }} align="center">
+              Wanted
+            </Title>
+            {auth.is_auth && canSetVisibility ? (
+              <Dropdown overlay={menu}>
+                <AiOutlineMore
+                  style={{ fontSize: 36, marginTop: 3, color: "white" }}
+                />
+              </Dropdown>
+            ) : auth.is_auth ? (
+              <Text style={{ fontSize: 14, marginTop: 12, color: "white" }}>
+                Visible: {String(visible).toLocaleUpperCase()}
+              </Text>
+            ) : null}
+          </div>
         </div>
       }
     >

@@ -73,6 +73,7 @@ export default function WantedPost({ match }) {
           loading={data.cLoading}
           visible={data.wantedPost.visible}
           canSetVisibility
+          backVisible
         />
       ) : (
         <Title style={{ color: "#fff", marginTop: 255 }} level={2}>

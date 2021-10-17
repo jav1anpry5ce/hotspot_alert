@@ -9,6 +9,7 @@ import { setActiveKey } from "../../store/navSlice";
 import PostCard from "../PostCard";
 import Loading from "../Loading";
 import ChatButton from "../ChatButton";
+import { CustomButton } from "./Elements";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -231,20 +232,22 @@ export default function Posts() {
           </Form.Item>
         </Form>
       </Modal>
-      <ChatButton bottom={90} />
-      <Button
+      <ChatButton bottom={85} />
+      <CustomButton
+        style={{ position: "fixed", bottom: 30, right: 25 }}
         onClick={showModal}
-        style={{ position: "fixed", right: 25, bottom: 30, zIndex: 1 }}
-        type="primary"
+        type="ghost"
         shape="circle"
         size="large"
-        icon={<PlusOutlined style={{ fontSize: 28 }} />}
+        block
+        icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
       />
+
       <Stack>
         {data.postsResults ? (
           data.postsResults.map((post, index) => {
             if (data.postsResults.length === index + 1) {
-              return auth.is_auth ? (
+              return auth.is_admin ? (
                 <div ref={lastPostElement} key={index}>
                   <PostCard
                     key={index}
@@ -290,7 +293,7 @@ export default function Posts() {
                 <div ref={lastPostElement}></div>
               );
             } else {
-              return auth.is_auth ? (
+              return auth.is_admin ? (
                 <PostCard
                   key={index}
                   id={post.id}

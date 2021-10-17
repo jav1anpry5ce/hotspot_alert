@@ -10,6 +10,7 @@ import {
   Form,
   Dropdown,
   Menu,
+  PageHeader,
 } from "antd";
 import { TextArea } from "./Elements";
 import ReactPlayer from "react-player";
@@ -43,6 +44,7 @@ export default function PostCard({
   visible,
   userKey,
   canSetVisibility,
+  backVisible,
 }) {
   const auth = useSelector((state) => state.auth);
   const history = useHistory();
@@ -58,7 +60,7 @@ export default function PostCard({
   const menu = (
     <Menu>
       <Menu.Item key={id}>
-        {auth.is_auth ? (
+        {auth.is_admin ? (
           visible ? (
             <Button onClick={onClick}>Set post invisible</Button>
           ) : (
@@ -78,6 +80,15 @@ export default function PostCard({
         backgroundColor: "rgba(255,255,255,0.95)",
       }}
     >
+      {backVisible ? (
+        <PageHeader
+          className="site-page-header"
+          onBack={() => window.history.back()}
+          title="Back"
+          style={{ marginTop: -35, marginLeft: -25 }}
+        />
+      ) : null}
+
       <Meta
         avatar={
           <Avatar
@@ -112,13 +123,13 @@ export default function PostCard({
                   verified
                 </span>
               </div>
-              {auth.is_auth && canSetVisibility ? (
+              {auth.is_admin && canSetVisibility ? (
                 <Dropdown overlay={menu}>
                   <AiOutlineMore
                     style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
                   />
                 </Dropdown>
-              ) : auth.is_auth ? (
+              ) : auth.is_admin ? (
                 <Text style={{ fontSize: 11 }}>
                   Visible: {String(visible).toLocaleUpperCase()}
                 </Text>
@@ -134,13 +145,13 @@ export default function PostCard({
               <Text style={{ display: "flex", marginBottom: -1 }}>
                 anonymous_user_{userKey}
               </Text>
-              {auth.is_auth && canSetVisibility ? (
+              {auth.is_admin && canSetVisibility ? (
                 <Dropdown overlay={menu}>
                   <AiOutlineMore
                     style={{ marginRight: 3, fontSize: 18, marginTop: 3 }}
                   />
                 </Dropdown>
-              ) : auth.is_auth ? (
+              ) : auth.is_admin ? (
                 <Text style={{ fontSize: 11 }}>
                   Visible: {String(visible).toLocaleUpperCase()}
                 </Text>

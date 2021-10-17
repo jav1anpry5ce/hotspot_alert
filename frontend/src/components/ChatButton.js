@@ -1,24 +1,22 @@
 import React from "react";
-import { Button } from "antd";
 import { MessageFilled } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
+import { CustomButton } from "./Posts/Elements";
 
 export default function ChatButton({ bottom }) {
   const history = useHistory();
   return (
-    <Button
+    <CustomButton
       onClick={() => history.push("/chats")}
       style={{
         position: "fixed",
         right: 25,
         bottom: bottom,
-        zIndex: 1,
-        backgroundColor: "rgba(0,0,0,0.0)",
-        border: "none",
       }}
       shape="circle"
       size="large"
-      icon={<MessageFilled style={{ fontSize: 38, color: "#5e99e6" }} />}
+      type="ghost"
+      icon={<MessageFilled style={{ fontSize: 22, color: "white" }} />}
     />
   );
 }
