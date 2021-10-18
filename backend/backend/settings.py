@@ -95,8 +95,10 @@ DATABASES = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '192.168.0.200'
+EMAIL_HOST = 'javaughnpryce.live'
 EMAIL_PORT = 25
+EMAIL_HOST_USER = 'django-web@localhost'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 
 # Password validation
@@ -156,7 +158,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 5,
 
 }
 

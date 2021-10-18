@@ -75,7 +75,7 @@ export default function MissingPerson() {
       });
       dispatch(clearState());
       showModal();
-      if (!page === 1) {
+      if (page !== 1) {
         setPage(1);
       } else {
         dispatch(getMissingPersons(1));

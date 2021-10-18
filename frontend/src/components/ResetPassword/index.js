@@ -51,7 +51,7 @@ export default function ResetPassword({ match }) {
         headStyle={{ backgroundColor: "#383d42" }}
         title={
           <Title style={{ color: "#fff" }} level={3}>
-            Change Password
+            Reset Password
           </Title>
         }
       >

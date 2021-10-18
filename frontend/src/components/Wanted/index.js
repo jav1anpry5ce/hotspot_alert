@@ -51,7 +51,7 @@ export default function Wanted() {
         image: "",
       });
       dispatch(clearState());
-      if (!page === 1) {
+      if (page !== 1) {
         setPage(1);
       } else {
         dispatch(getWantedList(1));

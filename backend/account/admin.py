@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserAccount
+from .models import UserAccount, ResetAccount
 from django.contrib.auth.admin import UserAdmin
 
 class UserAccountConfig(UserAdmin):
@@ -16,3 +16,4 @@ class UserAccountConfig(UserAdmin):
     )
 
 admin.site.register(UserAccount, UserAccountConfig)
+admin.site.register(ResetAccount)

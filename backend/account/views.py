@@ -138,7 +138,8 @@ def resetRequest(request):
             user = User.objects.get(username=request.data.get('username'), email=request.data.get('email'))
         except:
             return Response({'Message': 'username and/or email provided does not match any in our records!'}, status=status.HTTP_404_NOT_FOUND)
-        if ResetAccount.objects.get(user=user).delete():
+        if ResetAccount.objects.get(user=user):
+            ResetAccount.objects.get(user=user).delete()
             reset = ResetAccount.objects.create(user=user)
             subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
             text_content = 'This is an important message.'

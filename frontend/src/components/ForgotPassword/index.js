@@ -34,6 +34,7 @@ export default function ForgotPassword() {
         "Success",
         "An email as been sent with your reset link."
       );
+      dispatch(clearState());
     }
     // eslint-disable-next-line
   }, [auth.success]);
