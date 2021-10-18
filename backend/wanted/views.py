@@ -6,13 +6,22 @@ from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
+from rest_framework import filters
 
 from .models import Wanted
 from .serializers import WantedSerializer, CreateWantedSerializer
 
+class UserFiltering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_authenticated:
+            return queryset.all()
+        return queryset.filter(visible=True)
+
 class WantedList(ListAPIView):
     queryset = Wanted.objects.all()
     serializer_class = WantedSerializer
+    filter_backends = [UserFiltering]
+
 
 class WantedView(APIView):
     parser_classes = [MultiPartParser, FormParser]

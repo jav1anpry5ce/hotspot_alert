@@ -76,7 +76,7 @@ export default function WantedPost({ match }) {
           backVisible
         />
       ) : (
-        <Title style={{ color: "#fff", marginTop: 255 }} level={2}>
+        <Title style={{ color: "#fff", marginTop: "50%" }} level={2}>
           The wanted post you are looking for does not exist or has been
           removed.
         </Title>

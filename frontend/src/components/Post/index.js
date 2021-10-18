@@ -17,7 +17,6 @@ const { Title } = Typography;
 
 export default function Post({ match }) {
   const data = useSelector((state) => state.post);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
 
@@ -51,6 +50,8 @@ export default function Post({ match }) {
       } else {
         dispatch(setActiveKey("3"));
       }
+    } else {
+      dispatch(setActiveKey("3"));
     }
     // eslint-disable-next-line
   }, [data.post]);
@@ -73,63 +74,33 @@ export default function Post({ match }) {
     <Container maxWidth="sm">
       <ChatButton bottom={30} />
       {data.post ? (
-        auth.is_admin ? (
-          <PostCard
-            id={data.post.id}
-            author={data.post.author}
-            postDate={data.post.created_at}
-            title={data.post.title}
-            postImage={data.post.post_image}
-            postVideo={data.post.post_video}
-            postDescription={data.post.description}
-            option1={data.post.option1}
-            option2={data.post.option2}
-            option3={data.post.option3}
-            option4={data.post.option4}
-            option5={data.post.option5}
-            option6={data.post.option6}
-            comments={data.post.comments}
-            visible={data.post.visible}
-            addComment
-            loading={data.cLoading}
-            onSubmit={onSubmit}
-            setComment={setComment}
-            userKey={data.post.user_key}
-            canSetVisibility
-            backVisible
-          />
-        ) : data.post.visible ? (
-          <PostCard
-            id={data.post.id}
-            author={data.post.author}
-            postDate={data.post.created_at}
-            title={data.post.title}
-            postImage={data.post.post_image}
-            postVideo={data.post.post_video}
-            postDescription={data.post.description}
-            option1={data.post.option1}
-            option2={data.post.option2}
-            option3={data.post.option3}
-            option4={data.post.option4}
-            option5={data.post.option5}
-            option6={data.post.option6}
-            comments={data.post.comments}
-            visible={data.post.visible}
-            addComment
-            loading={data.cLoading}
-            onSubmit={onSubmit}
-            setComment={setComment}
-            userKey={data.post.user_key}
-            backVisible
-          />
-        ) : (
-          <Title level={4} style={{ color: "white", marginTop: 250 }}>
-            This post is no longer available or has been removed.
-          </Title>
-        )
+        <PostCard
+          id={data.post.id}
+          author={data.post.author}
+          postDate={data.post.created_at}
+          title={data.post.title}
+          postImage={data.post.post_image}
+          postVideo={data.post.post_video}
+          postDescription={data.post.description}
+          option1={data.post.option1}
+          option2={data.post.option2}
+          option3={data.post.option3}
+          option4={data.post.option4}
+          option5={data.post.option5}
+          option6={data.post.option6}
+          comments={data.post.comments}
+          visible={data.post.visible}
+          addComment
+          loading={data.cLoading}
+          onSubmit={onSubmit}
+          setComment={setComment}
+          userKey={data.post.user_key}
+          canSetVisibility
+          backVisible
+        />
       ) : (
-        <Title level={3} style={{ color: "white", marginTop: 250 }}>
-          The post you are looking for does not exist!
+        <Title level={4} style={{ color: "white", marginTop: "55%" }}>
+          This post is no longer available or has been removed.
         </Title>
       )}
     </Container>

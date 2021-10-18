@@ -179,6 +179,7 @@ export default function Wanted() {
         style={{
           bottom: auth.is_auth ? 140 : 85,
           right: 25,
+          zIndex: 1,
         }}
       />
       {auth.is_auth ? (
@@ -196,54 +197,11 @@ export default function Wanted() {
         <ChatButton bottom={30} />
       )}
       <Stack spacing={1}>
-        {data.results ? (
-          data.results.map((person, index) => {
-            if (data.results.length === index + 1) {
-              return auth.is_auth ? (
-                <div ref={lastPostElement} key={index}>
-                  <WantedPostCard
-                    id={person.id}
-                    name={person.name}
-                    image={person.wanted_image}
-                    crime={person.crime}
-                    reward={person.reward}
-                    comments={person.comments}
-                    visible={person.visible}
-                    viewPost
-                  />
-                </div>
-              ) : person.visible ? (
-                <div ref={lastPostElement} key={index}>
-                  <WantedPostCard
-                    id={person.id}
-                    name={person.name}
-                    image={person.wanted_image}
-                    crime={person.crime}
-                    reward={person.reward}
-                    comments={person.comments.slice(0, 5)}
-                    visible={person.visible}
-                    viewPost
-                  />
-                </div>
-              ) : (
-                <div ref={lastPostElement}></div>
-              );
-            } else {
-              return auth.is_auth ? (
+        {data.results.map((person, index) => {
+          if (data.results.length === index + 1) {
+            return (
+              <div ref={lastPostElement} key={index}>
                 <WantedPostCard
-                  key={index}
-                  id={person.id}
-                  name={person.name}
-                  image={person.wanted_image}
-                  crime={person.crime}
-                  reward={person.reward}
-                  comments={person.comments}
-                  visible={person.visible}
-                  viewPost
-                />
-              ) : person.visible ? (
-                <WantedPostCard
-                  key={index}
                   id={person.id}
                   name={person.name}
                   image={person.wanted_image}
@@ -253,14 +211,33 @@ export default function Wanted() {
                   visible={person.visible}
                   viewPost
                 />
-              ) : null;
-            }
-          })
-        ) : (
-          <Title style={{ color: "#fff", marginTop: 255 }} level={3}>
-            Nothing has been posted.
+              </div>
+            );
+          } else {
+            return (
+              <WantedPostCard
+                key={index}
+                id={person.id}
+                name={person.name}
+                image={person.wanted_image}
+                crime={person.crime}
+                reward={person.reward}
+                comments={person.comments.slice(0, 5)}
+                visible={person.visible}
+                viewPost
+              />
+            );
+          }
+        })}
+        {!data.loading && data.results.length === 0 ? (
+          <Title
+            align="center"
+            style={{ color: "#fff", marginTop: "50%" }}
+            level={2}
+          >
+            Nothing has been posted just yet.
           </Title>
-        )}
+        ) : null}
       </Stack>
       {data.loading ? (
         data.results.length > 0 ? (

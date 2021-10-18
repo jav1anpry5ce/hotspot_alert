@@ -5,6 +5,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
+from rest_framework import filters
 
 from .models import Post, Author, Comment
 from .serializers import PostSerializer, CreatePostSerializer
@@ -13,14 +14,22 @@ from wanted.models import Wanted
 from wanted.serializers import WantedSerializer
 
 
+class UserFiltering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_authenticated:
+            return queryset.all()
+        return queryset.filter(visible=True)
+
 class PostViewSet(ListAPIView):
     queryset = Post.objects.all().exclude(title='Missing Person')
     serializer_class = PostSerializer  
+    filter_backends = [UserFiltering]
 
 
 class MissingPersonViewSet(ListAPIView):
     queryset = Post.objects.filter(title='Missing Person')
     serializer_class = PostSerializer
+    filter_backends = [UserFiltering]
 
 
 class PostView(APIView):
@@ -55,7 +64,12 @@ def get_post(request, id):
     try:
         post = Post.objects.get(id=id)
         serializer = PostSerializer(post)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if post.visible:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif request.user.is_authenticated and post.visible == False:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'Message': 'This post is no longer available or has been removed.'}, status=status.HTTP_404_NOT_FOUND)
     except:
         return Response({'Message': 'Post does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 

@@ -5,6 +5,9 @@ export const getPosts = createAsyncThunk("get/posts", async (page) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      Authorization: sessionStorage.getItem("token")
+        ? "Token  " + sessionStorage.getItem("token")
+        : null,
     },
   };
   const response = await axios.get(`api/posts?page=${page}`, config);
@@ -20,6 +23,9 @@ export const getMissingPersons = createAsyncThunk(
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
       },
     };
     const response = await axios.get(`api/missing-person?page=${page}`, config);
@@ -33,81 +39,83 @@ export const getMissingPersons = createAsyncThunk(
 export const createPost = createAsyncThunk(
   "create/post",
   async (data, { rejectWithValue }) => {
-    if (sessionStorage.getItem("token")) {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Token " + sessionStorage.getItem("token"),
-        },
-      };
-      console.log(data);
-      let formData = new FormData();
-      if (data.image) {
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("option1", data.option1);
-        formData.append("option2", data.option2);
-        formData.append("option3", data.option3);
-        formData.append("option4", data.option4);
-        formData.append("option5", data.option5);
-        formData.append("option6", data.option6);
-        if (data.image.type.includes("image")) {
-          formData.append("image", data.image);
-        } else if (data.image.type.includes("video")) {
-          formData.append("video", data.image);
-        } else {
-          formData.append("image", null);
-        }
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
+      },
+    };
+    let formData = new FormData();
+    if (data.image) {
+      formData.append("user_key", localStorage.getItem("user_key"));
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("option1", data.option1);
+      formData.append("option2", data.option2);
+      formData.append("option3", data.option3);
+      formData.append("option4", data.option4);
+      formData.append("option5", data.option5);
+      formData.append("option6", data.option6);
+      if (data.image.type.includes("image")) {
+        formData.append("image", data.image);
+      } else if (data.image.type.includes("video")) {
+        formData.append("video", data.image);
       } else {
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("option1", data.option1);
-        formData.append("option2", data.option2);
-        formData.append("option3", data.option3);
-        formData.append("option4", data.option4);
-        formData.append("option5", data.option5);
-        formData.append("option6", data.option6);
-      }
-      try {
-        await axios.post("/api/create-post/", formData, config);
-      } catch (err) {
-        return rejectWithValue(err.response.data);
+        formData.append("image", null);
       }
     } else {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      let formData = new FormData();
-      if (data.image) {
-        formData.append("user_key", localStorage.getItem("user_key"));
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("option1", data.option1);
-        formData.append("option2", data.option2);
-        formData.append("option3", data.option3);
-        if (data.image.type.includes("image")) {
-          formData.append("image", data.image);
-        } else if (data.image.type.includes("video")) {
-          formData.append("video", data.image);
-        } else {
-          formData.append("image", null);
-        }
-      } else {
-        formData.append("user_key", localStorage.getItem("user_key"));
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("option1", data.option1);
-        formData.append("option2", data.option2);
-        formData.append("option3", data.option3);
-      }
-      try {
-        await axios.post("/api/create-post/", formData, config);
-      } catch (err) {
-        return rejectWithValue(err.response.data);
-      }
+      formData.append("user_key", localStorage.getItem("user_key"));
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("option1", data.option1);
+      formData.append("option2", data.option2);
+      formData.append("option3", data.option3);
+      formData.append("option4", data.option4);
+      formData.append("option5", data.option5);
+      formData.append("option6", data.option6);
     }
+    try {
+      await axios.post("/api/create-post/", formData, config);
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+    //else {
+    //   const config = {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   };
+    //   let formData = new FormData();
+    //   if (data.image) {
+    //     formData.append("user_key", localStorage.getItem("user_key"));
+    //     formData.append("title", data.title);
+    //     formData.append("description", data.description);
+    //     formData.append("option1", data.option1);
+    //     formData.append("option2", data.option2);
+    //     formData.append("option3", data.option3);
+    //     if (data.image.type.includes("image")) {
+    //       formData.append("image", data.image);
+    //     } else if (data.image.type.includes("video")) {
+    //       formData.append("video", data.image);
+    //     } else {
+    //       formData.append("image", null);
+    //     }
+    //   } else {
+    //     formData.append("user_key", localStorage.getItem("user_key"));
+    //     formData.append("title", data.title);
+    //     formData.append("description", data.description);
+    //     formData.append("option1", data.option1);
+    //     formData.append("option2", data.option2);
+    //     formData.append("option3", data.option3);
+    //   }
+    //   try {
+    //     await axios.post("/api/create-post/", formData, config);
+    //   } catch (err) {
+    //     return rejectWithValue(err.response.data);
+    //   }
+    // }
   }
 );
 
@@ -117,6 +125,9 @@ export const getPost = createAsyncThunk(
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
       },
     };
     const response = await axios.get(`/api/get-post/${post_id}`, config);

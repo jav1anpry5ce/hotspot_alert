@@ -18,14 +18,14 @@ export default function Home() {
       maxWidth="xls"
       style={{
         color: "#fff",
-        minHeight: "94.4vh",
+        minHeight: "95.5vh",
         backgroundImage: `url(${image})`,
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
-        marginTop: 50,
+        marginTop: 40,
       }}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="md" style={{ marginTop: 25 }}>
         <ChatButton bottom={20} />
         <Title align="center" style={{ color: "white" }}>
           Welcome to Hotspot Alert

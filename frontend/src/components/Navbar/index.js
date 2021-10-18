@@ -31,7 +31,7 @@ export default function Navbar() {
   const history = useHistory();
   const [show, setShow] = useState(true);
   const [expand, setExpand] = useState(false);
-  const [height, setHeight] = useState(39);
+  const [height, setHeight] = useState(43);
 
   useEffect(() => {
     window.addEventListener("resize", resize);
@@ -67,7 +67,7 @@ export default function Navbar() {
         position: "fixed",
         top: 0,
         width: "100%",
-        zIndex: 1,
+        zIndex: 2,
       }}
     >
       <div>
@@ -212,7 +212,7 @@ export default function Navbar() {
             maxWidth="xsl"
             style={{
               height: height,
-              transition: expand ? ".3s ease-in-out" : ".3s ease-out",
+              transition: expand ? ".5s ease-in-out" : ".5s ease-out",
             }}
           >
             <FaBars
@@ -229,15 +229,16 @@ export default function Navbar() {
                 container
                 spacing={2}
                 style={{
-                  animation: expand ? "fadeIn ease 2s" : "fadeOut ease 2s",
                   display: "flex",
                   justifyContent: "center",
                 }}
               >
                 <Grid
                   item
-                  xs={6}
-                  // style={{ display: "flex", justifyContent: "center" }}
+                  xs={5}
+                  style={{
+                    marginTop: "10%",
+                  }}
                 >
                   <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                     <Item

@@ -38,7 +38,6 @@ const crimeData = [
 
 export default function Posts() {
   const data = useSelector((state) => state.post);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -249,6 +248,7 @@ export default function Posts() {
         style={{
           bottom: 140,
           right: 25,
+          zIndex: 1,
         }}
       />
       <ChatButton bottom={85} />
@@ -261,58 +261,11 @@ export default function Posts() {
         block
         icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
       />
-
       <Stack>
-        {data.postsResults ? (
-          data.postsResults.map((post, index) => {
-            if (data.postsResults.length === index + 1) {
-              return auth.is_admin ? (
-                <div ref={lastPostElement} key={index}>
-                  <PostCard
-                    key={index}
-                    id={post.id}
-                    author={post.author}
-                    postDate={post.created_at}
-                    title={post.title}
-                    postImage={post.post_image}
-                    postVideo={post.post_video}
-                    postDescription={post.description}
-                    option1={post.option1}
-                    option2={post.option2}
-                    option3={post.option3}
-                    option4={post.option4}
-                    comments={post.comments.slice(0, 5)}
-                    visible={post.visible}
-                    viewPost
-                    userKey={post.user_key}
-                  />
-                </div>
-              ) : post.visible ? (
-                <div ref={lastPostElement} key={index}>
-                  <PostCard
-                    key={index}
-                    id={post.id}
-                    author={post.author}
-                    postDate={post.created_at}
-                    title={post.title}
-                    postImage={post.post_image}
-                    postVideo={post.post_video}
-                    postDescription={post.description}
-                    option1={post.option1}
-                    option2={post.option2}
-                    option3={post.option3}
-                    option4={post.option4}
-                    comments={post.comments.slice(0, 5)}
-                    visible={post.visible}
-                    viewPost
-                    userKey={post.user_key}
-                  />
-                </div>
-              ) : (
-                <div ref={lastPostElement}></div>
-              );
-            } else {
-              return auth.is_admin ? (
+        {data.postsResults.map((post, index) => {
+          if (data.postsResults.length === index + 1) {
+            return (
+              <div ref={lastPostElement} key={index}>
                 <PostCard
                   key={index}
                   id={post.id}
@@ -331,31 +284,36 @@ export default function Posts() {
                   viewPost
                   userKey={post.user_key}
                 />
-              ) : post.visible ? (
-                <PostCard
-                  key={index}
-                  id={post.id}
-                  author={post.author}
-                  postDate={post.created_at}
-                  title={post.title}
-                  postImage={post.post_image}
-                  postVideo={post.post_video}
-                  postDescription={post.description}
-                  option1={post.option1}
-                  option2={post.option2}
-                  option3={post.option3}
-                  option4={post.option4}
-                  comments={post.comments.slice(0, 5)}
-                  visible={post.visible}
-                  viewPost
-                  userKey={post.user_key}
-                />
-              ) : null;
-            }
-          })
-        ) : (
-          <Title level={3}>Nothing has been posted just yet.</Title>
-        )}
+              </div>
+            );
+          } else {
+            return (
+              <PostCard
+                key={index}
+                id={post.id}
+                author={post.author}
+                postDate={post.created_at}
+                title={post.title}
+                postImage={post.post_image}
+                postVideo={post.post_video}
+                postDescription={post.description}
+                option1={post.option1}
+                option2={post.option2}
+                option3={post.option3}
+                option4={post.option4}
+                comments={post.comments.slice(0, 5)}
+                visible={post.visible}
+                viewPost
+                userKey={post.user_key}
+              />
+            );
+          }
+        })}
+        {!data.loading && data.postsResults.length === 0 ? (
+          <Title level={3} style={{ color: "white", marginTop: "50%" }}>
+            Nothing has been posted just yet.
+          </Title>
+        ) : null}
       </Stack>
       {data.loading ? (
         data.postsResults.length > 0 ? (

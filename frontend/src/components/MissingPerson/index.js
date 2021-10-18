@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Stack } from "@mui/material";
-import { Button, Modal, Select, Form, Input, Spin, BackTop } from "antd";
+import {
+  Button,
+  Modal,
+  Select,
+  Form,
+  Input,
+  Spin,
+  BackTop,
+  Typography,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +26,7 @@ import { CustomButton } from "../Posts/Elements";
 
 const { TextArea } = Input;
 const { Option } = Select;
+const { Title } = Typography;
 
 const genderData = [
   { label: "Male", value: "Male" },
@@ -252,6 +262,7 @@ export default function MissingPerson() {
         style={{
           bottom: auth.is_auth ? 140 : 85,
           right: 25,
+          zIndex: 1,
         }}
       />
       {auth.is_auth ? (
@@ -269,52 +280,59 @@ export default function MissingPerson() {
         <ChatButton bottom={30} />
       )}
       <Stack>
-        {data.missingPersonsResults
-          ? data.missingPersonsResults.map((person, index) => {
-              if (data.missingPersonsResults.length === index + 1) {
-                return (
-                  <div ref={lastPostElement} key={index}>
-                    <PostCard
-                      id={person.id}
-                      author={person.author}
-                      postDate={person.created_at}
-                      title={person.title}
-                      postImage={person.post_image}
-                      postDescription={person.description}
-                      option1={person.option1}
-                      option2={person.option2}
-                      option3={person.option3}
-                      option4={person.option4}
-                      option5={person.option5}
-                      option6={person.option6}
-                      visible={person.visible}
-                      viewPost
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <PostCard
-                    key={index}
-                    id={person.id}
-                    author={person.author}
-                    postDate={person.created_at}
-                    title={person.title}
-                    postImage={person.post_image}
-                    postDescription={person.description}
-                    option1={person.option1}
-                    option2={person.option2}
-                    option3={person.option3}
-                    option4={person.option4}
-                    option5={person.option5}
-                    option6={person.option6}
-                    visible={person.visible}
-                    viewPost
-                  />
-                );
-              }
-            })
-          : null}
+        {data.missingPersonsResults.map((person, index) => {
+          if (data.missingPersonsResults.length === index + 1) {
+            return (
+              <div ref={lastPostElement} key={index}>
+                <PostCard
+                  id={person.id}
+                  author={person.author}
+                  postDate={person.created_at}
+                  title={person.title}
+                  postImage={person.post_image}
+                  postDescription={person.description}
+                  option1={person.option1}
+                  option2={person.option2}
+                  option3={person.option3}
+                  option4={person.option4}
+                  option5={person.option5}
+                  option6={person.option6}
+                  visible={person.visible}
+                  viewPost
+                />
+              </div>
+            );
+          } else {
+            return (
+              <PostCard
+                key={index}
+                id={person.id}
+                author={person.author}
+                postDate={person.created_at}
+                title={person.title}
+                postImage={person.post_image}
+                postDescription={person.description}
+                option1={person.option1}
+                option2={person.option2}
+                option3={person.option3}
+                option4={person.option4}
+                option5={person.option5}
+                option6={person.option6}
+                visible={person.visible}
+                viewPost
+              />
+            );
+          }
+        })}
+        {!data.loading && data.missingPersonsResults.length === 0 ? (
+          <Title
+            align="center"
+            style={{ color: "white", marginTop: "50%" }}
+            level={2}
+          >
+            Nothing has been posted just yet.
+          </Title>
+        ) : null}
       </Stack>
       {data.loading ? (
         data.missingPersonsResults.length > 0 ? (

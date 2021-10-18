@@ -48,7 +48,7 @@ function App() {
         </Header>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Content style={{ overflow: "auto", marginTop: 55 }}>
+          <Content style={{ overflow: "hidden", marginTop: 55 }}>
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/post/:post_id" component={Post} />
             <Route exact path="/account/signin" component={SignIn} />

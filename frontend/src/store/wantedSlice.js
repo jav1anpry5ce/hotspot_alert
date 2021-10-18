@@ -7,6 +7,9 @@ export const getWantedList = createAsyncThunk(
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
       },
     };
     const response = await axios.get(`/api/wanted-list?page=${page}`, config);

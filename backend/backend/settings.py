@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get('DEBUG')) == "1"
 
-ALLOWED_HOSTS = ['javaughnpryce.live']
+ALLOWED_HOSTS = ['javaughnpryce.live', '*']
 
 
 # Application definition

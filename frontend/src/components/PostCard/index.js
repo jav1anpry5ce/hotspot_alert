@@ -77,8 +77,9 @@ export default function PostCard({
         marginTop: 6,
         marginBottom: 6,
         borderRadius: 9,
-        backgroundColor: "rgba(255,255,255,0.95)",
+        backgroundColor: "rgba(250,250,250,0.85)",
       }}
+      bordered={false}
     >
       {backVisible ? (
         <PageHeader
@@ -159,7 +160,7 @@ export default function PostCard({
           )
         }
         description={
-          <Text style={{ display: "flex", marginTop: -6, color: "grey" }}>
+          <Text style={{ display: "flex", marginTop: -6, color: "#1f1f1f" }}>
             {new Date(postDate).toLocaleString()}
           </Text>
         }
@@ -220,7 +221,9 @@ export default function PostCard({
                     <div>
                       {comment.author ? (
                         <div style={{ display: "flex", marginBottom: -3 }}>
-                          <Text>{comment.author.account.name}</Text>
+                          <Text style={{ color: "#1f1f1f" }}>
+                            {comment.author.account.name}
+                          </Text>
                           <span
                             style={{
                               fontSize: 11,
@@ -234,7 +237,9 @@ export default function PostCard({
                           </span>
                         </div>
                       ) : (
-                        `anonymous_user_${comment.user_key}`
+                        <Text style={{ color: "#1f1f1f" }}>
+                          anonymous_user_{comment.user_key}
+                        </Text>
                       )}
                     </div>
                   }
@@ -242,7 +247,9 @@ export default function PostCard({
                     <p style={{ marginTop: -5 }}>{comment.description}</p>
                   }
                   datetime={
-                    <span>{new Date(comment.created_at).toLocaleString()}</span>
+                    <span style={{ color: "#333333" }}>
+                      {new Date(comment.created_at).toLocaleString()}
+                    </span>
                   }
                 />
               ))
