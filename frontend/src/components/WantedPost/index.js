@@ -57,7 +57,7 @@ export default function WantedPost({ match }) {
     return <Loading />;
   }
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <ChatButton bottom={30} />
       {data.wantedPost ? (
         <WantedPostCard

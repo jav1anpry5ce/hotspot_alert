@@ -70,9 +70,15 @@ io.on("connect", (socket) => {
     }
   });
 
+  socket.on("typing", () => {
+    const user = getUser(socket.id);
+    io.to(user.room).emit("typing", {
+      user: user.name,
+    });
+  });
+
   socket.on("getRooms", (token) => {
     try {
-      console.log(token);
       if (token.token === SECURITY_TOKEN) {
         io.emit("rooms", {
           user: "admin",

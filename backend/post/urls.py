@@ -7,6 +7,5 @@ urlpatterns = [
     path('create-post/', views.PostView.as_view()),
     path('get-post/<id>', views.get_post),
     path('add-comment/', views.add_comment),
-    path('add-wanted-comment/', views.add_wanted_comment),
     path('set-visibility/', views.set_visibility),
 ]

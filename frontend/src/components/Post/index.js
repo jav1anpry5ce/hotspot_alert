@@ -60,7 +60,7 @@ export default function Post({ match }) {
     if (comment) {
       const data = {
         id: match.params.post_id,
-        description: comment,
+        description: comment.trim(),
         user_key: localStorage.getItem("user_key"),
       };
       dispatch(addComment(data));
@@ -71,7 +71,7 @@ export default function Post({ match }) {
     return <Loading />;
   }
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <ChatButton bottom={30} />
       {data.post ? (
         <PostCard

@@ -61,6 +61,11 @@ export default function Navbar() {
   const handelSelect = (eventKey) => {
     dispatch(setActiveKey(eventKey));
   };
+
+  if (nav.hide) {
+    return null;
+  }
+
   return (
     <NavBar
       style={{

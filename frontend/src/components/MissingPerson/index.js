@@ -109,14 +109,14 @@ export default function MissingPerson() {
     ) {
       const data = {
         title: "Missing Person",
-        description,
+        description: description.trim(),
         image,
-        option1,
-        option2,
-        option3,
-        option4,
-        option5,
-        option6,
+        option1: option1.trim(),
+        option2: option2.trim(),
+        option3: option3.trim(),
+        option4: option4.trim(),
+        option5: option5.trim(),
+        option6: option6.trim(),
       };
       if (image.size <= 71457280) dispatch(createPost(data));
       else openNotification("error", "Error", "Selected fill is too large.");
@@ -145,7 +145,7 @@ export default function MissingPerson() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <Modal
         visible={show}
         onCancel={() => setShow(!show)}

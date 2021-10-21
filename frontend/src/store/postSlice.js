@@ -81,41 +81,6 @@ export const createPost = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
-    //else {
-    //   const config = {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   };
-    //   let formData = new FormData();
-    //   if (data.image) {
-    //     formData.append("user_key", localStorage.getItem("user_key"));
-    //     formData.append("title", data.title);
-    //     formData.append("description", data.description);
-    //     formData.append("option1", data.option1);
-    //     formData.append("option2", data.option2);
-    //     formData.append("option3", data.option3);
-    //     if (data.image.type.includes("image")) {
-    //       formData.append("image", data.image);
-    //     } else if (data.image.type.includes("video")) {
-    //       formData.append("video", data.image);
-    //     } else {
-    //       formData.append("image", null);
-    //     }
-    //   } else {
-    //     formData.append("user_key", localStorage.getItem("user_key"));
-    //     formData.append("title", data.title);
-    //     formData.append("description", data.description);
-    //     formData.append("option1", data.option1);
-    //     formData.append("option2", data.option2);
-    //     formData.append("option3", data.option3);
-    //   }
-    //   try {
-    //     await axios.post("/api/create-post/", formData, config);
-    //   } catch (err) {
-    //     return rejectWithValue(err.response.data);
-    //   }
-    // }
   }
 );
 
@@ -145,39 +110,22 @@ export const getPost = createAsyncThunk(
 export const addComment = createAsyncThunk(
   "add/comment",
   async (data, { rejectWithValue }) => {
-    if (sessionStorage.getItem("token")) {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token  " + sessionStorage.getItem("token"),
-        },
-      };
-      try {
-        const response = await axios.post("/api/add-comment/", data, config);
-        if (response.status === 201) {
-          const data = response.data;
-          return { data };
-        }
-      } catch (error) {
-        console.log(error);
-        return rejectWithValue(error.response.data);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
+      },
+    };
+    try {
+      const response = await axios.post("/api/add-comment/", data, config);
+      if (response.status === 201) {
+        const data = response.data;
+        return { data };
       }
-    } else {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      try {
-        const response = await axios.post("/api/add-comment/", data, config);
-        if (response.status === 201) {
-          const data = response.data;
-          return { data };
-        }
-      } catch (error) {
-        console.log(error);
-        return rejectWithValue(error.response.data);
-      }
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -289,14 +237,17 @@ export const postSlice = createSlice({
     },
     [addComment.pending]: (state) => {
       state.cLoading = true;
+      state.message = null;
     },
     [addComment.fulfilled]: (state, { payload }) => {
       state.cLoading = false;
       state.post = payload.data;
       state.success = true;
+      state.message = null;
     },
     [addComment.rejected]: (state, { payload }) => {
       state.cLoading = false;
+      state.message = payload.Message;
     },
     [setVisibility.pending]: (state) => {
       state.vLoading = true;

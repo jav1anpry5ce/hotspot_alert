@@ -6,4 +6,5 @@ urlpatterns = [
     path('create-wanted-person/', views.WantedView.as_view()),
     path('get-wanted-post/<id>', views.get_wanted_post),
     path('set-wanted-visibility/', views.set_visibility),
+    path('add-wanted-comment/', views.add_wanted_comment),
 ]

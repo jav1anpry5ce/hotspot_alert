@@ -44,7 +44,7 @@ export default function ResetPassword({ match }) {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <Card
         style={{ borderRadius: 7, marginTop: 35 }}
         bordered={false}

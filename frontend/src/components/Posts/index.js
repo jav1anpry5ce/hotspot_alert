@@ -118,11 +118,11 @@ export default function Posts() {
         if (option1 && option2 && option3 && image) {
           data = {
             title,
-            description,
+            description: description.trim(),
             image,
-            option1,
-            option2,
-            option3,
+            option1: option1.trim(),
+            option2: option2.trim(),
+            option3: option3.trim(),
           };
         } else {
           openNotification("error", "Error", "Please fill out all fields.");
@@ -130,7 +130,7 @@ export default function Posts() {
       } else {
         data = {
           title,
-          description,
+          description: description.trim(),
           image,
         };
       }
@@ -148,11 +148,8 @@ export default function Posts() {
     }
   };
 
-  // if (data.loading) {
-  //   return <Loading />;
-  // }
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <Modal
         visible={show}
         onCancel={() => setShow(!show)}
@@ -310,7 +307,11 @@ export default function Posts() {
           }
         })}
         {!data.loading && data.postsResults.length === 0 ? (
-          <Title level={3} style={{ color: "white", marginTop: "50%" }}>
+          <Title
+            align="center"
+            level={2}
+            style={{ color: "white", marginTop: "50%" }}
+          >
             Nothing has been posted just yet.
           </Title>
         ) : null}

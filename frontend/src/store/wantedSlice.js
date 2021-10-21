@@ -43,47 +43,26 @@ export const getWantedPost = createAsyncThunk(
 export const addComment = createAsyncThunk(
   "add/wanted/comment",
   async (data, { rejectWithValue }) => {
-    if (sessionStorage.getItem("token")) {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Token  " + sessionStorage.getItem("token"),
-        },
-      };
-      try {
-        const response = await axios.post(
-          "/api/add-wanted-comment/",
-          data,
-          config
-        );
-        if (response.status === 201) {
-          const data = response.data;
-          return { data };
-        }
-      } catch (error) {
-        console.log(error);
-        return rejectWithValue(error.response.data);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token")
+          ? "Token  " + sessionStorage.getItem("token")
+          : null,
+      },
+    };
+    try {
+      const response = await axios.post(
+        "/api/add-wanted-comment/",
+        data,
+        config
+      );
+      if (response.status === 201) {
+        const data = response.data;
+        return { data };
       }
-    } else {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      try {
-        const response = await axios.post(
-          "/api/add-wanted-comment/",
-          data,
-          config
-        );
-        if (response.status === 201) {
-          const data = response.data;
-          return { data };
-        }
-      } catch (error) {
-        console.log(error);
-        return rejectWithValue(error.response.data);
-      }
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -204,14 +183,17 @@ export const wantedSlice = createSlice({
     },
     [addComment.pending]: (state) => {
       state.cLoading = true;
+      state.message = null;
     },
     [addComment.fulfilled]: (state, { payload }) => {
       state.cLoading = false;
       state.wantedPost = payload.data;
       state.success = true;
+      state.message = null;
     },
     [addComment.rejected]: (state, { payload }) => {
       state.cLoading = false;
+      state.message = payload.Message;
     },
     [setVisibility.pending]: (state) => {
       state.vLoading = true;

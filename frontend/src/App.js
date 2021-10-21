@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import { Container, Header, Content } from "rsuite";
+import { Container, Header } from "rsuite";
 import "./App.css";
 import {
   Navbar,
@@ -19,6 +19,7 @@ import {
   WantedPost,
   Chats,
   Chat,
+  NotFoundPage,
 } from "./components";
 
 import image from "./images/justice.jpeg";
@@ -48,37 +49,36 @@ function App() {
         </Header>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Content style={{ overflow: "hidden", marginTop: 55 }}>
-            <Route exact path="/posts" component={Posts} />
-            <Route exact path="/post/:post_id" component={Post} />
-            <Route exact path="/account/signin" component={SignIn} />
-            <Route
-              exact
-              path="/account/change-password"
-              component={ChangePassword}
-            />
-            <Route exact path="/wanted" component={Wanted} />
-            <Route
-              exact
-              path="/account/forgot-password"
-              component={ForgotPassword}
-            />
-            <Route
-              exact
-              path="/account/password/reset/:token"
-              component={ResetPassword}
-            />
-            <Route exact path="/add-account" component={AddAccount} />
-            <Route
-              exact
-              path="/account/activation/:activate/:token"
-              component={AccountActivation}
-            />
-            <Route exact path="/missing-persons" component={MissingPerson} />
-            <Route exact path="/wanted/post/:id" component={WantedPost} />
-            <Route exact path="/chats" component={Chats} />
-            <Route exact path="/chat/:room_id" component={Chat} />
-          </Content>
+          <Route exact path="/posts" component={Posts} />
+          <Route exact path="/post/:post_id" component={Post} />
+          <Route exact path="/account/signin" component={SignIn} />
+          <Route
+            exact
+            path="/account/change-password"
+            component={ChangePassword}
+          />
+          <Route exact path="/wanted" component={Wanted} />
+          <Route
+            exact
+            path="/account/forgot-password"
+            component={ForgotPassword}
+          />
+          <Route
+            exact
+            path="/account/password/reset/:token"
+            component={ResetPassword}
+          />
+          <Route exact path="/add-account" component={AddAccount} />
+          <Route
+            exact
+            path="/account/activation/:activate/:token"
+            component={AccountActivation}
+          />
+          <Route exact path="/missing-persons" component={MissingPerson} />
+          <Route exact path="/wanted/post/:id" component={WantedPost} />
+          <Route exact path="/chats" component={Chats} />
+          <Route exact path="/chat/:room_id" component={Chat} />
+          <Route component={NotFoundPage} />
         </Switch>
       </Router>
     </Container>

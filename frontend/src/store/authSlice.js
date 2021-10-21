@@ -154,7 +154,11 @@ export const authSlice = createSlice({
       state.loading = false;
       state.success = false;
       try {
-        state.message = payload.Message;
+        if (payload.Message) {
+          state.message = payload.Message;
+        } else if (payload.detail) {
+          state.message = payload.detail;
+        }
       } catch (err) {
         state.message = "Something went wrong!";
       }
@@ -234,7 +238,11 @@ export const authSlice = createSlice({
     [changePassword.rejected]: (state, { payload }) => {
       state.loading = false;
       try {
-        state.message = payload.Message;
+        if (payload.Message) {
+          state.message = payload.Message;
+        } else if (payload.detail) {
+          state.message = payload.detail;
+        }
       } catch (err) {
         state.message = "Something went wrong.";
       }

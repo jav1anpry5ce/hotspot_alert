@@ -15,6 +15,8 @@ export default function Chat({ match }) {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [typing, setTyping] = useState(false);
+
   let name;
   if (auth.is_auth) {
     name = "dispatcher";
@@ -27,7 +29,21 @@ export default function Chat({ match }) {
   useEffect(() => {
     dispatch(setActiveKey("2"));
     socket.on("message", (message) => {
+      if (message.user !== name) {
+        setTyping(false);
+      }
       setMessages((messages) => [...messages, message]);
+    });
+
+    socket.on("typing", (data) => {
+      if (typing === false) {
+        if (data.user !== name) {
+          setTyping(true);
+          setTimeout(() => {
+            setTyping(false);
+          }, 5000);
+        }
+      }
     });
 
     if (room) {
@@ -41,7 +57,7 @@ export default function Chat({ match }) {
     // eslint-disable-next-line
   }, [match.params.room_id]);
 
-  window.addEventListener("keyup", function (event) {
+  window.addEventListener("keydown", function (event) {
     if (event.code === "Enter") {
       event.preventDefault();
       document.getElementById("send-message").click();
@@ -57,14 +73,13 @@ export default function Chat({ match }) {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" style={{ marginTop: 55 }}>
       <Card
         bordered={false}
         style={{
-          height: "90.5vh",
-          marginTop: 7,
+          marginTop: 5,
           backgroundColor: "rgba(255,255,255,0.9)",
-          borderRadius: 7,
+          borderRadius: 5,
         }}
         headStyle={{ backgroundColor: "#383d42" }}
         title={
@@ -73,22 +88,19 @@ export default function Chat({ match }) {
           </Title>
         }
       >
-        <Messages messages={messages} name={name} />
+        <Messages messages={messages} name={name} typing={typing} />
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginBottom: 5,
           }}
         >
           <TextArea
-            onFocus={() => {
-              window.scrollTo(1000, 0);
-              document.body.scrollTop = 0;
-            }}
+            id="text"
             rows={1}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={() => socket.emit("typing")}
           />
           <Button onClick={onClick} id="send-message">
             Send

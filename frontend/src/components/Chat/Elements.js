@@ -21,7 +21,7 @@ export const Time = Styled.p`
 
 export const Text = Styled.p`
   padding: 9px 14px;
-  font-size: 0.9rem;
+  font-size: ${(props) => (props.fontSize ? props.fontSize : "0.9rem")};
   margin-bottom: 5px;
   background: ${(props) => props.background};
   color: ${(props) => props.color};

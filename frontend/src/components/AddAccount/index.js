@@ -38,8 +38,11 @@ export default function AddAccount() {
       });
       openNotification("success", "Success", "Account created successfully.");
     }
+    if (auth.message) {
+      openNotification("error", "Error", auth.message);
+    }
     // eslint-disable-next-line
-  }, [auth.success]);
+  }, [auth.success, auth.message]);
 
   const onSubmit = () => {
     const data = {
@@ -53,7 +56,7 @@ export default function AddAccount() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <Card
         style={{ borderRadius: 7, marginTop: 35 }}
         bordered={false}

@@ -75,8 +75,8 @@ export default function Wanted() {
   const onSubmit = () => {
     if (name && crime && reward) {
       const data = {
-        name,
-        crime,
+        name: name.trim(),
+        crime: crime.trim,
         reward,
         image,
       };
@@ -109,7 +109,7 @@ export default function Wanted() {
   );
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       <Modal
         visible={show}
         onCancel={() => setShow(!show)}

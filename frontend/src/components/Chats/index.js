@@ -41,7 +41,7 @@ export default function Chats() {
     // eslint-disable-next-line
   }, [auth.is_auth, token, auth.security_token]);
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: 25 }}>
       {auth.is_auth ? (
         <Card
           style={{
