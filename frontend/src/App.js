@@ -22,8 +22,6 @@ import {
   NotFoundPage,
 } from "./components";
 
-import image from "./images/justice.jpeg";
-
 axios.defaults.baseURL = "http://javaughnpryce.live:8000/";
 
 if (!localStorage.getItem("user_key")) {
@@ -33,16 +31,7 @@ if (!localStorage.getItem("user_key")) {
 
 function App() {
   return (
-    <Container
-      className="App"
-      style={{
-        backgroundImage: `url(${image})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        backgroundAttachment: "fixed",
-        minHeight: "100vh",
-      }}
-    >
+    <Container className="App">
       <Router>
         <Header>
           <Navbar />

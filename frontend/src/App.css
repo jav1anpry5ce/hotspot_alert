@@ -4,6 +4,15 @@
   font-family: "Sora", sans-serif;
 }
 
+.App {
+  background-image: url("./images/justice.jpeg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  min-width: 100%;
+}
+
 .centered {
   position: fixed;
   top: 45%;

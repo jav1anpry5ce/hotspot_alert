@@ -41,7 +41,7 @@ export default function Chats() {
     // eslint-disable-next-line
   }, [auth.is_auth, token, auth.security_token]);
   return (
-    <Container maxWidth="sm" style={{ marginTop: 25 }}>
+    <Container maxWidth="sm" style={{ marginTop: 55 }}>
       {auth.is_auth ? (
         <Card
           style={{
@@ -80,7 +80,7 @@ export default function Chats() {
               Emergency Chat
             </Title>
           }
-          style={{ marginTop: 155, backgroundColor: "rgba(255,255,255,0.7)" }}
+          style={{ marginTop: 135, backgroundColor: "rgba(255,255,255,0.7)" }}
         >
           <Title level={3} strong style={{ marginBottom: -11 }}>
             Feeling Unsafe?

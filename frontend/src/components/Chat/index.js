@@ -6,9 +6,10 @@ import { TextArea } from "../PostCard/Elements";
 import Messages from "./Messages";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../../store/navSlice";
+import { Back } from "./Elements";
 
 const socket = io("javaughnpryce.live:5000");
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function Chat({ match }) {
   const auth = useSelector((state) => state.auth);
@@ -16,6 +17,7 @@ export default function Chat({ match }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [typing, setTyping] = useState(false);
+  const text = document.getElementById("text-message");
 
   let name;
   if (auth.is_auth) {
@@ -53,22 +55,34 @@ export default function Chat({ match }) {
         }
       });
     }
+
     return () => socket.emit("left");
     // eslint-disable-next-line
   }, [match.params.room_id]);
 
-  window.addEventListener("keydown", function (event) {
-    if (event.code === "Enter") {
-      event.preventDefault();
-      document.getElementById("send-message").click();
+  useEffect(() => {
+    if (text) {
+      text.addEventListener("keydown", function (event) {
+        if (event.code === "Enter") {
+          event.preventDefault();
+          document.getElementById("send-message").click();
+        }
+      });
     }
-  });
+  }, [text]);
 
   const onClick = (event) => {
     event.preventDefault();
     if (message) {
       socket.emit("sendMessage", message);
       setMessage("");
+    }
+  };
+
+  const leave = () => {
+    const con = window.confirm("Are you sure you want to leave the chat?");
+    if (con) {
+      window.history.back();
     }
   };
 
@@ -83,8 +97,13 @@ export default function Chat({ match }) {
         }}
         headStyle={{ backgroundColor: "#383d42" }}
         title={
-          <Title align="center" style={{ color: "#fff" }} level={3}>
-            Emergency Chat
+          <Title style={{ display: "inline-flex", color: "#fff" }} level={3}>
+            <div style={{ display: "inline-flex" }}>
+              {<Back style={{ marginTop: 3 }} onClick={leave} />}
+              <Text style={{ color: "#fff", marginLeft: 15 }}>
+                Emergency Chat
+              </Text>
+            </div>
           </Title>
         }
       >
@@ -96,7 +115,7 @@ export default function Chat({ match }) {
           }}
         >
           <TextArea
-            id="text"
+            id="text-message"
             rows={1}
             value={message}
             onChange={(e) => setMessage(e.target.value)}

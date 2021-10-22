@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Navbar as NavBar, Item, Dropdown } from "./NavbarElements";
+import { Navbar as NavBar, Item, Dropdown, Grid } from "./NavbarElements";
 import { Nav } from "rsuite";
-import { Container, Grid } from "@mui/material";
+import { Container } from "@mui/material";
 import { AiFillHome } from "react-icons/ai";
 import { RiCriminalFill, RiUserAddLine } from "react-icons/ri";
 import { FcSettings } from "react-icons/fc";
@@ -230,14 +230,7 @@ export default function Navbar() {
               onClick={() => setExpand(!expand)}
             />
             {expand ? (
-              <Grid
-                container
-                spacing={2}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
+              <Grid container spacing={2}>
                 <Grid
                   item
                   xs={5}

@@ -1,4 +1,5 @@
 import Styled from "styled-components";
+import { MdOutlineArrowBackIos } from "react-icons/md";
 
 export const Conversation = Styled.div`
   display: grid;
@@ -30,6 +31,12 @@ export const Text = Styled.p`
   word-wrap: break-word;
   max-width: 85%;
   margin-right: 15px
+`;
+
+export const Back = Styled(MdOutlineArrowBackIos)`
+    &:hover {
+      cursor: pointer;
+    }
 `;
 
 // import Styled from "styled-components";
