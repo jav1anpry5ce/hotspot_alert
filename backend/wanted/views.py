@@ -48,10 +48,12 @@ def get_wanted_post(request, id):
 @permission_classes([permissions.IsAuthenticated])
 def set_visibility(request):
     try:
-        wanted = Wanted.objects.get(id=request.data.get('id'))
-        wanted.visible = not(wanted.visible)
-        wanted.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_admin:
+            wanted = Wanted.objects.get(id=request.data.get('id'))
+            wanted.visible = not(wanted.visible)
+            wanted.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'Message': 'Access denied.'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 

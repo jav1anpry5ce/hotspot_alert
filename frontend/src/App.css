@@ -12,6 +12,23 @@
   min-height: 100vh;
   min-width: 100%;
 }
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.089);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(104, 104, 104);
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(59, 59, 59);
+  border-radius: 7px;
+}
 
 .centered {
   position: fixed;

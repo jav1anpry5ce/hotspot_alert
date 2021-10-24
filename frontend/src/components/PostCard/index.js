@@ -11,6 +11,7 @@ import {
   Dropdown,
   Menu,
   PageHeader,
+  Spin,
 } from "antd";
 import { TextArea } from "./Elements";
 import ReactPlayer from "react-player";
@@ -18,6 +19,8 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineMore } from "react-icons/ai";
 import { setVisibility } from "../../store/postSlice";
+import RandomColor from "../../functions/RandomColor";
+import { LoadingOutlined } from "@ant-design/icons";
 const { Meta } = Card;
 const { Text, Paragraph, Title } = Typography;
 
@@ -170,7 +173,35 @@ export default function PostCard({
           <Title level={3}>{title}</Title>
           {postImage ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Image alt={postImage} src={postImage} width={250} />
+              <Image
+                style={{ borderRadius: 4 }}
+                placeholder={
+                  <div
+                    style={{
+                      backgroundColor: `${RandomColor()}`,
+                      minHeight: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 56,
+                            color: "white",
+                          }}
+                        />
+                      }
+                      size="large"
+                    />
+                  </div>
+                }
+                alt={postImage}
+                src={postImage}
+                width={250}
+              />
             </div>
           ) : postVideo ? (
             <div style={{ display: "flex", justifyContent: "center" }}>

@@ -96,9 +96,11 @@ def add_comment(request):
 @permission_classes([permissions.IsAuthenticated])
 def set_visibility(request):
     try:
-        post = Post.objects.get(id=request.data.get('id'))
-        post.visible = not(post.visible)
-        post.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_admin:
+            post = Post.objects.get(id=request.data.get('id'))
+            post.visible = not(post.visible)
+            post.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'Message': 'Access denied.'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)

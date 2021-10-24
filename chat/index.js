@@ -80,9 +80,21 @@ io.on("connect", (socket) => {
   socket.on("getRooms", (token) => {
     try {
       if (token.token === SECURITY_TOKEN) {
+        const roomData = [];
+        const rooms = getRooms();
+        if (rooms.length > 0) {
+          let data;
+          rooms.map((room) => {
+            data = {
+              name: room,
+              users: getUsersInRoom(room),
+            };
+            roomData.push(data);
+          });
+        }
         io.emit("rooms", {
           user: "admin",
-          rooms: getRooms(),
+          data: roomData.length > 0 ? roomData : [],
         });
       } else {
         io.emit("rooms", {

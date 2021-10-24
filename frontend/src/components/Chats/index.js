@@ -25,7 +25,7 @@ export default function Chats() {
       socket.emit("getRooms", { token });
     }
     socket.on("rooms", (rooms) => {
-      setRooms(rooms.rooms);
+      setRooms(rooms.data);
     });
     socket.on("roomCreated", () => {
       if (auth.is_auth && token) {
@@ -60,12 +60,18 @@ export default function Chats() {
             {rooms
               ? rooms.map((room, index) => (
                   <Card
-                    onClick={() => history.push(`/chat/${room}`)}
+                    onClick={() => history.push(`/chat/${room.name}`)}
                     style={{ borderRadius: 7 }}
                     hoverable
                     key={index}
                   >
-                    {room}
+                    <Title level={5} style={{ fontSize: 14 }}>
+                      Room Id: {room.name}
+                    </Title>
+                    <Text strong>Users active: </Text> <br />
+                    {room.users.map((user) => (
+                      <div>{user.name}</div>
+                    ))}
                   </Card>
                 ))
               : null}

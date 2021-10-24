@@ -37,6 +37,7 @@ export default function AddAccount() {
         image: "",
       });
       openNotification("success", "Success", "Account created successfully.");
+      dispatch(clearState());
     }
     if (auth.message) {
       openNotification("error", "Error", auth.message);
@@ -52,7 +53,6 @@ export default function AddAccount() {
       image,
     };
     dispatch(register(data));
-    dispatch(clearState());
   };
 
   return (
@@ -109,7 +109,12 @@ export default function AddAccount() {
             />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
-            <Button type="primary" htmlType="submit" loading={auth.loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disable={auth.loading}
+              loading={auth.loading}
+            >
               Add Account
             </Button>
           </Form.Item>

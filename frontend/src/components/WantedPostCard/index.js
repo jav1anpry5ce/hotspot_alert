@@ -9,6 +9,7 @@ import {
   Avatar,
   Menu,
   Dropdown,
+  Spin,
 } from "antd";
 import { TextArea } from "../PostCard/Elements";
 import { AiOutlineMore } from "react-icons/ai";
@@ -16,6 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setVisibility } from "../../store/wantedSlice";
 import { Back } from "../Chat/Elements";
+import RandomColor from "../../functions/RandomColor";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Text, Paragraph, Title } = Typography;
 
@@ -49,7 +52,7 @@ export default function WantedPostCard({
   const menu = (
     <Menu>
       <Menu.Item key={id}>
-        {auth.is_auth ? (
+        {auth.is_admin ? (
           visible ? (
             <Button onClick={onClick}>Set post invisible</Button>
           ) : (
@@ -69,7 +72,11 @@ export default function WantedPostCard({
         <div
           style={{
             display: "flex",
-            justifyContent: backVisible ? "space-between" : "space-between",
+            justifyContent: backVisible
+              ? auth.is_admin && canSetVisibility
+                ? "space-between"
+                : null
+              : "space-between",
             marginBottom: -20,
           }}
         >
@@ -86,13 +93,13 @@ export default function WantedPostCard({
           >
             Wanted
           </Title>
-          {auth.is_auth && canSetVisibility ? (
+          {auth.is_admin && canSetVisibility ? (
             <Dropdown overlay={menu}>
               <AiOutlineMore
                 style={{ fontSize: 36, marginTop: 3, color: "white" }}
               />
             </Dropdown>
-          ) : auth.is_auth ? (
+          ) : auth.is_admin ? (
             <Text style={{ fontSize: 14, marginTop: 12, color: "white" }}>
               Visible: {String(visible).toLocaleUpperCase()}
             </Text>
@@ -103,7 +110,34 @@ export default function WantedPostCard({
       <Paragraph>
         <Title level={3}>{name}</Title>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Image width={350} src={image} alt={image} />
+          <Image
+            placeholder={
+              <div
+                style={{
+                  backgroundColor: `${RandomColor()}`,
+                  minHeight: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{
+                        fontSize: 56,
+                        color: "white",
+                      }}
+                    />
+                  }
+                  size="large"
+                />
+              </div>
+            }
+            width={350}
+            src={image}
+            alt={image}
+          />
         </div>
         <Text strong>Crime: {crime}</Text> <br />
         <Text strong>Reward: ${reward}</Text>
@@ -126,7 +160,9 @@ export default function WantedPostCard({
                   <div>
                     {comment.author ? (
                       <div style={{ display: "flex", marginBottom: -3 }}>
-                        <Text>{comment.author.account.name}</Text>
+                        <Text style={{ color: "#1f1f1f" }}>
+                          {comment.author.account.name}
+                        </Text>
                         <span
                           style={{
                             fontSize: 11,
@@ -140,13 +176,17 @@ export default function WantedPostCard({
                         </span>
                       </div>
                     ) : (
-                      `anonymous_user_${comment.user_key}`
+                      <Text style={{ color: "#1f1f1f" }}>
+                        anonymous_user_{comment.user_key}
+                      </Text>
                     )}
                   </div>
                 }
                 content={<p style={{ marginTop: -5 }}>{comment.description}</p>}
                 datetime={
-                  <span>{new Date(comment.created_at).toLocaleString()}</span>
+                  <span style={{ color: "#333333" }}>
+                    {new Date(comment.created_at).toLocaleString()}
+                  </span>
                 }
               />
             ))
