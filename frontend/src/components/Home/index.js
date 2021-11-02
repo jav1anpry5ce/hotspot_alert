@@ -3,7 +3,6 @@ import { Container } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setActiveKey } from "../../store/navSlice";
 import ChatButton from "../ChatButton";
-import image from "../../images/person.jpg";
 
 import { Title, Paragraph } from "./Elements";
 
@@ -14,20 +13,10 @@ export default function Home() {
     // eslint-disable-next-line
   }, []);
   return (
-    <Container
-      maxWidth="xls"
-      style={{
-        color: "#fff",
-        minHeight: "95.5vh",
-        backgroundImage: `url(${image})`,
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-        marginTop: 40,
-      }}
-    >
-      <Container maxWidth="md" style={{ marginTop: 25 }}>
+    <Container maxWidth="xls">
+      <Container maxWidth="md" style={{ marginTop: 35 }}>
         <ChatButton bottom={20} />
-        <Title align="center" style={{ color: "white" }}>
+        <Title align="center" style={{ color: "white", marginTop: 60 }}>
           Welcome to Hotspot Alert
         </Title>
         <Paragraph strong style={{ color: "white", fontSize: 20 }}>

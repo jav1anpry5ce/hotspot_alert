@@ -6,6 +6,7 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.authtoken.models import Token
 from .models import ResetAccount, ActivateAccount
+from station.models import Station
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 from post.models import Author
@@ -28,11 +29,19 @@ def create(request):
                 if not User.objects.filter(email=request.data.get('email')).exists():
                     if not User.objects.filter(username=request.data.get('username')).exists():
                         user = User.objects.create_user(email=request.data.get('email'), username=request.data.get('username'), 
-                        name=request.data.get('name'), password=password)
-                        if request.data.get('is_admin'):
+                        first_name=request.data.get('first_name'), last_name=request.data.get('last_name'), account_type=request.data.get('account_type'),
+                        password=password)
+                        if request.data.get('is_admin') == 'true':
                             user.is_admin = True
                         if request.FILES.get('image'):
                             user.profile_photo = request.FILES.get('image')
+                        if request.data.get('station'):
+                            try:
+                                station = Station.objects.get(name=request.data.get('station'))
+                                user.station = station
+                            except:
+                                station = Station.objects.create(name=request.data.get('station'))
+                                user.station = station
                         user.save()
                         Author.objects.create(account=user)
                         activatToken = ActivateAccount.objects.create(user=user)
@@ -40,7 +49,7 @@ def create(request):
                         html_content = f'''
                         <html>
                             <body>
-                                <p>Hello {user.name}, welcome to our system!</p>
+                                <p>Hello {user.first_name}, welcome to our system!</p>
                                 <p>Please go to the following link to activate your account.</p>
                                 <p><a href="{site}account/activation/{activatToken.activate}/{activatToken.token}">{site}account/activation/{activatToken.activate}/{activatToken.token}</a></p>
                             </body>
@@ -76,7 +85,7 @@ def activate(request):
                     html_content = f'''
                     <html>
                         <body>
-                            <p>Hello {user.name} your account has been sucessfully activated!</p>
+                            <p>Hello {user.first_name} your account has been sucessfully activated!</p>
                         </body>
                     </html>
                     '''
@@ -102,8 +111,9 @@ def login(request):
                 user.save()
                 return Response({
                     "auth_token": token.key, 
-                    "username": user.name,
+                    "username": user.username,
                     "is_admin": user.is_admin,
+                    "account_type": user.account_type,
                     'security_token': '5090de76-fdf0-47ee-8c69-8735be0807b7',
                     }, status=status.HTTP_200_OK)
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_400_BAD_REQUEST)
@@ -115,8 +125,9 @@ def login(request):
                 user.save()
                 return Response({
                     "auth_token": token.key, 
-                    "username": user.name, 
-                    "is_admin": user.is_admin, 
+                    "username": user.username, 
+                    "is_admin": user.is_admin,
+                    "account_type": user.account_type,
                     'security_token': '5090de76-fdf0-47ee-8c69-8735be0807b7',
                     })
             return Response({'Message': 'Check username and/or password'}, status=status.HTTP_404_NOT_FOUND)

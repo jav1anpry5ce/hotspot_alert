@@ -35,7 +35,7 @@ export default function Navbar() {
 
   useEffect(() => {
     window.addEventListener("resize", resize);
-    if (window.innerWidth <= 760) {
+    if (window.innerWidth <= 1055) {
       setShow(false);
     } else {
       setShow(true);
@@ -51,7 +51,7 @@ export default function Navbar() {
   }, [expand, auth.is_auth]);
 
   const resize = () => {
-    if (window.innerWidth <= 760) {
+    if (window.innerWidth <= 1055) {
       setShow(false);
     } else {
       setShow(true);

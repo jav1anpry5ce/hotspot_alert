@@ -33,7 +33,6 @@ class PostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
         try:
-            print(request.data)
             if request.data.get('title') == 'Missing Person':
                 if request.user.is_authenticated:
                     serializer = CreatePostSerializer(data=request.data)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from station.models import Station
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, username, password, **extra_fields):
@@ -29,23 +30,26 @@ class UserAccountManager(BaseUserManager):
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255, default='Station')
+    station = models.ForeignKey(Station, null=True, blank=True, on_delete=models.CASCADE)
+    account_type = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True, blank=True, null=True)
-    profile_photo = models.ImageField(upload_to='images/', blank=True, null=True)
+    profile_photo = models.ImageField(upload_to='images/', blank=True, null=True, default='dispatcher.jpg')
 
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'name']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
 
     def __str__(self):
-        return self.name
+        return self.username
 
     def profile_image(self):
         if self.profile_photo:

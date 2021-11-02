@@ -253,7 +253,7 @@ export default function PostCard({
                       {comment.author ? (
                         <div style={{ display: "flex", marginBottom: -3 }}>
                           <Text style={{ color: "#1f1f1f" }}>
-                            {comment.author.account.name}
+                            {comment.author.account.username}
                           </Text>
                           <span
                             style={{

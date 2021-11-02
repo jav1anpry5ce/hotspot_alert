@@ -13,7 +13,11 @@ export const register = createAsyncThunk(
     let formData = new FormData();
     formData.append("email", data.email);
     formData.append("username", data.username);
-    formData.append("name", data.name);
+    formData.append("first_name", data.first_name);
+    formData.append("last_name", data.last_name);
+    formData.append("station", data.station);
+    formData.append("is_admin", data.is_admin);
+    formData.append("account_type", data.account_type);
     formData.append("image", data.image);
     try {
       await axios.post("auth/register/", formData, config);
@@ -119,6 +123,20 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const getStations = createAsyncThunk("get/stations", async () => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Token " + sessionStorage.getItem("token"),
+    },
+  };
+  const response = await axios.get("api/get-stations", config);
+  if (response.status === 200) {
+    const data = response.data;
+    return { data };
+  }
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -131,6 +149,7 @@ export const authSlice = createSlice({
     message: null,
     success: false,
     lLoading: false,
+    stations: null,
   },
   reducers: {
     clearState: (state) => {
@@ -138,6 +157,7 @@ export const authSlice = createSlice({
       state.message = null;
       state.loading = false;
       state.lLoading = false;
+      state.stations = null;
     },
   },
   extraReducers: {
@@ -280,6 +300,16 @@ export const authSlice = createSlice({
       } catch (err) {
         state.message = "Something went wrong.";
       }
+    },
+    [getStations.pending]: (state) => {
+      state.loading = true;
+    },
+    [getStations.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.stations = payload.data;
+    },
+    [getStations.rejected]: (state) => {
+      state.loading = false;
     },
   },
 });

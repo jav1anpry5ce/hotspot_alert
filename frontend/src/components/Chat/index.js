@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
 import { Container } from "@mui/material";
 import { Card, Button, Typography } from "antd";
 import { TextArea } from "../PostCard/Elements";
@@ -8,10 +7,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../../store/navSlice";
 import { Back } from "./Elements";
 
-const socket = io("javaughnpryce.live:5000");
 const { Title, Text } = Typography;
 
-export default function Chat({ match }) {
+export default function Chat({ match, socket }) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
@@ -56,7 +54,12 @@ export default function Chat({ match }) {
       });
     }
 
-    return () => socket.emit("left");
+    return () => {
+      socket.emit("left");
+      socket.off("typing");
+      socket.off("message");
+      socket.off("join");
+    };
     // eslint-disable-next-line
   }, [match.params.room_id]);
 
@@ -87,7 +90,7 @@ export default function Chat({ match }) {
   };
 
   return (
-    <Container maxWidth="md" style={{ marginTop: 55 }}>
+    <Container maxWidth="md" style={{ marginTop: 65 }}>
       <Card
         bordered={false}
         style={{

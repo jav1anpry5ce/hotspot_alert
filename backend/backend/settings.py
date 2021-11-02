@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
+    "django_extensions",
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'account',
     'post',
     'wanted',
+    'station',
 ]
 
 MIDDLEWARE = [
@@ -146,8 +147,8 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'FILES')
-MEDIA_URL= '/FILES/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'FILES/media')
+MEDIA_URL= '/media/'
 
 
 REST_FRAMEWORK = {
@@ -158,13 +159,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5,
+    'PAGE_SIZE': 20,
 
 }
 
 TIME_ZONE = 'America/Jamaica'
 
 CORS_ORIGIN_ALLOW_ALL = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

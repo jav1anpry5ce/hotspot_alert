@@ -5,7 +5,8 @@
 }
 
 .App {
-  background-image: url("./images/justice.jpeg");
+  background: linear-gradient(0deg, rgb(21, 76, 121, 0.3), rgb(6, 57, 112, 0.3)),
+    url("./images/justice.jpeg");
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
@@ -22,12 +23,12 @@
 
 ::-webkit-scrollbar-thumb {
   background: rgb(104, 104, 104);
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(59, 59, 59);
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 .centered {

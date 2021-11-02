@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@mui/material";
-import { Card, Typography, Button, Input, Form } from "antd";
+import { Card, Typography, Form, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { register, clearState } from "../../store/authSlice";
+import { register, clearState, getStations } from "../../store/authSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navSlice";
 import { openNotification } from "../../functions/Notification";
+import { StationFields, DispatcherAdminFields } from "./AccountFields";
 
 const { Title } = Typography;
+const { Option } = Select;
+
+const data = [
+  { label: "Admin", value: "Admin" },
+  { label: "Dispatcher", value: "Dispatcher" },
+  { label: "Station", value: "Station" },
+];
 
 export default function AddAccount() {
   const auth = useSelector((state) => state.auth);
@@ -15,12 +23,18 @@ export default function AddAccount() {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [station, setStation] = useState("");
   const [image, setImage] = useState(null);
+  const [admin, setAdmin] = useState(false);
+  const [accountType, setAccountType] = useState();
+  const [account, setAccount] = useState("");
   const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch(setActiveKey("6"));
+    dispatch(getStations());
     if (!auth.is_admin) {
       history.push("/");
     }
@@ -33,11 +47,22 @@ export default function AddAccount() {
       form.setFieldsValue({
         email: "",
         username: "",
+        first_name: "",
+        last_name: "",
         station: "",
-        image: "",
+        image: null,
       });
       openNotification("success", "Success", "Account created successfully.");
       dispatch(clearState());
+      dispatch(getStations());
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setUsername("");
+      setImage(null);
+      setAdmin(false);
+      setStation("");
+      setAccount("");
     }
     if (auth.message) {
       openNotification("error", "Error", auth.message);
@@ -49,14 +74,71 @@ export default function AddAccount() {
     const data = {
       email,
       username,
-      name,
+      first_name: firstName,
+      last_name: lastName,
+      station,
       image,
+      is_admin: admin,
+      account_type: account,
     };
     dispatch(register(data));
   };
 
+  const getAccountType = () => {
+    switch (accountType) {
+      case "Dispatcher":
+        return (
+          <DispatcherAdminFields
+            accountType={accountType}
+            setEmail={setEmail}
+            setUsername={setUsername}
+            form={form}
+            loading={auth.loading}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
+            onSubmit={onSubmit}
+            setAccount={setAccount}
+          />
+        );
+      case "Station":
+        return (
+          <StationFields
+            setEmail={setEmail}
+            setUsername={setUsername}
+            form={form}
+            loading={auth.loading}
+            setStation={setStation}
+            setFirstName={setFirstName}
+            setImage={setImage}
+            onSubmit={onSubmit}
+            setAccount={setAccount}
+          />
+        );
+      case "Admin":
+        return (
+          <DispatcherAdminFields
+            accountType={accountType}
+            setEmail={setEmail}
+            setUsername={setUsername}
+            form={form}
+            loading={auth.loading}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
+            setStation={setStation}
+            setAdmin={setAdmin}
+            stations={auth.stations}
+            isAdmin
+            onSubmit={onSubmit}
+            setAccount={setAccount}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Container maxWidth="sm" style={{ marginTop: 55 }}>
+    <Container maxWidth="sm" style={{ marginTop: 65 }}>
       <Card
         style={{ borderRadius: 7, marginTop: 35 }}
         bordered={false}
@@ -67,7 +149,27 @@ export default function AddAccount() {
           </Title>
         }
       >
-        <Form layout="vertical" form={form} onFinish={onSubmit}>
+        <Form layout="vertical">
+          <Form.Item
+            style={{ marginBottom: 3 }}
+            label="Select account type"
+            required
+          >
+            <Select
+              style={{ borderRadius: 30, width: "100%" }}
+              onChange={(e) => setAccountType(e)}
+            >
+              {data.map((data, index) => (
+                <Option key={index} value={data.value}>
+                  {data.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+        {getAccountType()}
+
+        {/* <Form layout="vertical" form={form} onFinish={onSubmit}>
           <Form.Item
             label="Email"
             name="email"
@@ -118,7 +220,7 @@ export default function AddAccount() {
               Add Account
             </Button>
           </Form.Item>
-        </Form>
+        </Form> */}
       </Card>
     </Container>
   );

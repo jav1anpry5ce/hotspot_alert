@@ -48,7 +48,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: 55 }}>
+    <Container maxWidth="sm" style={{ marginTop: 65 }}>
       <Card
         style={{ borderRadius: 7, marginTop: 35 }}
         bordered={false}
@@ -83,6 +83,7 @@ export default function ForgotPassword() {
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               allowClear
+              type="email"
             />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>

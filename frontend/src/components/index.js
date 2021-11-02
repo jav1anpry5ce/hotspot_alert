@@ -14,3 +14,5 @@ export { default as Wanted } from "./Wanted";
 export { default as WantedPost } from "./WantedPost";
 export { default as ChangePassword } from "./ChangePassword";
 export { default as NotFoundPage } from "./404Page";
+export { default as Footer } from "./Footer";
+export { default as Copyright } from "./Footer/Copyright";

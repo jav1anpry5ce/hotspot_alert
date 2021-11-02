@@ -5,6 +5,6 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
         fields = (
-        'name',
+        'username',
         'profile_image',
         )

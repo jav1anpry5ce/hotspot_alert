@@ -9,7 +9,7 @@ const fadeIn = keyframes`
 `;
 
 export const Navbar = styled(NavBar)`
-  background-color: #12142b;
+  background-color: #131927;
 `;
 
 export const Nav = styled(N)``;

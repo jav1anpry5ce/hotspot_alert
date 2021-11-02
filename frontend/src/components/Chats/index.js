@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { Container, Stack } from "@mui/material";
 import { Card, Typography, Button } from "antd";
 import { useHistory } from "react-router-dom";
@@ -7,10 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import create_UUID from "../../functions/CreateUUID";
 import { setActiveKey } from "../../store/navSlice";
 
-const socket = io("javaughnpryce.live:5000");
 const { Title, Text } = Typography;
 
-export default function Chats() {
+export default function Chats({ socket }) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -37,11 +35,15 @@ export default function Chats() {
         socket.emit("getRooms", { token });
       }
     });
-    return () => socket.emit("left");
+    return () => {
+      socket.off("rooms.get");
+      socket.off("roomCreated");
+      socket.off("you can update");
+    };
     // eslint-disable-next-line
   }, [auth.is_auth, token, auth.security_token]);
   return (
-    <Container maxWidth="sm" style={{ marginTop: 55 }}>
+    <Container maxWidth="sm" style={{ marginTop: 65, marginBottom: 10 }}>
       {auth.is_auth ? (
         <Card
           style={{
