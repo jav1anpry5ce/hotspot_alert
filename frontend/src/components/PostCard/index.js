@@ -113,7 +113,7 @@ export default function PostCard({
               }}
             >
               <div style={{ display: "flex" }}>
-                <Text>{author.account.name}</Text>
+                <Text>{author.account.username}</Text>
                 <span
                   style={{
                     fontSize: 16,
