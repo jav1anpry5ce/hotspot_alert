@@ -265,7 +265,7 @@ export default function MissingPerson() {
           zIndex: 1,
         }}
       />
-      {auth.is_auth ? (
+      {auth.is_auth && auth.account_type !== "Dispatcher" ? (
         <div>
           <CustomButton
             onClick={showModal}

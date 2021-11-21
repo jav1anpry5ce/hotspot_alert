@@ -38,6 +38,7 @@ const crimeData = [
 
 export default function Posts() {
   const data = useSelector((state) => state.post);
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -249,15 +250,18 @@ export default function Posts() {
         }}
       />
       <ChatButton bottom={85} />
-      <CustomButton
-        style={{ position: "fixed", bottom: 30, right: 25 }}
-        onClick={showModal}
-        type="ghost"
-        shape="circle"
-        size="large"
-        block
-        icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
-      />
+      {auth.account_type !== "Dispatcher" && (
+        <CustomButton
+          style={{ position: "fixed", bottom: 30, right: 25 }}
+          onClick={showModal}
+          type="ghost"
+          shape="circle"
+          size="large"
+          block
+          icon={<PlusOutlined style={{ fontSize: 28, color: "white" }} />}
+        />
+      )}
+
       <Stack>
         {data.postsResults.map((post, index) => {
           if (data.postsResults.length === index + 1) {

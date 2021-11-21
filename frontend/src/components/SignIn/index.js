@@ -16,13 +16,15 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (auth.is_auth) {
+    if (auth.is_auth && auth.account_type === "Dispatcher")
+      history.push("/chats");
+    else if (auth.is_auth) {
       history.push("/posts");
     }
     dispatch(setActiveKey(""));
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, [auth.is_auth, auth.account_type]);
 
   const onSubmit = () => {
     const data = {

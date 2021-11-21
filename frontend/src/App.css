@@ -5,8 +5,7 @@
 }
 
 .App {
-  background: linear-gradient(0deg, rgb(21, 76, 121, 0.3), rgb(6, 57, 112, 0.3)),
-    url("./images/justice.jpeg");
+  background: url("./images/justice.jpeg");
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;

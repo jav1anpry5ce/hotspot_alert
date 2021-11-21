@@ -150,6 +150,7 @@ export const authSlice = createSlice({
     success: false,
     lLoading: false,
     stations: null,
+    account_type: sessionStorage.getItem("account_type"),
   },
   reducers: {
     clearState: (state) => {
@@ -212,12 +213,14 @@ export const authSlice = createSlice({
       state.token = payload.data.auth_token;
       state.security_token = payload.data.security_token;
       state.message = null;
+      state.account_type = payload.data.account_type;
       sessionStorage.setItem("username", payload.data.username);
       sessionStorage.setItem("is_auth", true);
       sessionStorage.setItem("security_token", payload.data.security_token);
       sessionStorage.setItem("is_admin", payload.data.is_admin);
       sessionStorage.setItem("token", payload.data.auth_token);
       sessionStorage.setItem("_expiredTime", Date.now() + 60 * 60 * 1000);
+      sessionStorage.setItem("account_type", payload.data.account_type);
     },
     [login.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -237,11 +240,13 @@ export const authSlice = createSlice({
       state.is_admin = false;
       state.token = null;
       state.security_token = null;
+      state.account_type = null;
       sessionStorage.removeItem("username");
       sessionStorage.removeItem("is_auth");
       sessionStorage.removeItem("is_admin");
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("security_token");
+      sessionStorage.removeItem("account_type");
     },
     [logout.rejected]: (state) => {
       state.lLoading = false;

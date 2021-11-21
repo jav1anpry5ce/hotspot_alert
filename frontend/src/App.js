@@ -24,7 +24,7 @@ import {
 } from "./components";
 import { io } from "socket.io-client";
 
-axios.defaults.baseURL = "https://javaughnpryce.live:8000/";
+axios.defaults.baseURL = "https://javaughnpryce.live:8002/";
 
 const socket = io("https://javaughnpryce.live:6060");
 
@@ -40,7 +40,7 @@ function App() {
         <Header>
           <Navbar />
         </Header>
-        <Content>
+        <Content style={{ backgroundColor: "rgba(31, 42, 61, 0.7)" }}>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/posts" component={Posts} />

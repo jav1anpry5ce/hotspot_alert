@@ -11,5 +11,5 @@ export default configureStore({
     navbar: navReducer,
     wanted: wantedReducer,
   },
-  devTools: false,
+  devTools: true,
 });
